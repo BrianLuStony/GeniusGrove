@@ -1,38 +1,16 @@
 import NextAuth from "next-auth"
 import "next-auth/jwt"
-
-import Apple from "next-auth/providers/apple"
-import Auth0 from "next-auth/providers/auth0"
-import AzureB2C from "next-auth/providers/azure-ad-b2c"
-import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
-import Cognito from "next-auth/providers/cognito"
-import Coinbase from "next-auth/providers/coinbase"
-import Discord from "next-auth/providers/discord"
-import Dropbox from "next-auth/providers/dropbox"
-import Facebook from "next-auth/providers/facebook"
+import { encode, decode } from 'next-auth/jwt'
 import GitHub from "next-auth/providers/github"
-import GitLab from "next-auth/providers/gitlab"
 import Google from "next-auth/providers/google"
-import Hubspot from "next-auth/providers/hubspot"
-import Keycloak from "next-auth/providers/keycloak"
-import LinkedIn from "next-auth/providers/linkedin"
-import Netlify from "next-auth/providers/netlify"
-import Okta from "next-auth/providers/okta"
-import Passage from "next-auth/providers/passage"
-import Passkey from "next-auth/providers/passkey"
-import Pinterest from "next-auth/providers/pinterest"
-import Reddit from "next-auth/providers/reddit"
-import Slack from "next-auth/providers/slack"
-import Spotify from "next-auth/providers/spotify"
-import Twitch from "next-auth/providers/twitch"
-import Twitter from "next-auth/providers/twitter"
-import WorkOS from "next-auth/providers/workos"
-import Zoom from "next-auth/providers/zoom"
+import Credentials from 'next-auth/providers/credentials'
 import { createStorage } from "unstorage"
 import memoryDriver from "unstorage/drivers/memory"
 import vercelKVDriver from "unstorage/drivers/vercel-kv"
 import { UnstorageAdapter } from "@auth/unstorage-adapter"
 import type { NextAuthConfig } from "next-auth"
+import { compare } from 'bcrypt-ts';
+import { getUser } from "./db"
 
 const storage = createStorage({
   driver: process.env.VERCEL
@@ -47,52 +25,50 @@ const storage = createStorage({
 const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   adapter: UnstorageAdapter(storage),
+  session: {
+    strategy: 'jwt',
+  },
+  jwt: { encode, decode },
   providers: [
-    Apple,
-    Auth0,
-    AzureB2C({
-      clientId: process.env.AUTH_AZURE_AD_B2C_ID,
-      clientSecret: process.env.AUTH_AZURE_AD_B2C_SECRET,
-      issuer: process.env.AUTH_AZURE_AD_B2C_ISSUER,
-    }),
-    BoxyHQSAML({
-      clientId: "dummy",
-      clientSecret: "dummy",
-      issuer: process.env.AUTH_BOXYHQ_SAML_ISSUER,
-    }),
-    Cognito,
-    Coinbase,
-    Discord,
-    Dropbox,
-    Facebook,
     GitHub,
-    GitLab,
     Google,
-    Hubspot,
-    Keycloak,
-    LinkedIn,
-    Netlify,
-    Okta,
-    Passkey({
-      formFields: {
+    Credentials({
+      name: "Sign in",
+      credentials: {
         email: {
-          label: "Username",
-          required: true,
-          autocomplete: "username webauthn",
+          label: "Email",
+          type: "email",
+          placeholder: "example@example.com",
         },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize({ email, password }: any) {
+        if (!email || !password) {
+          console.error("No credentials provided");
+          return null;
+        }
+        const user = await getUser(email);
+        if (!user || user.length === 0) {
+          console.error("No user found with email:", email);
+          return null;
+        }
+        // const passwordsMatch = await compare(password, user[0].password!);
+        // if (!passwordsMatch) {
+        //   console.error("Invalid password for user:", email);
+        //   return null;
+        // }
+        if(password == user[0].password){
+          console.log(user[0]);
+          return user[0] as any;
+        }else{
+          return null;
+        }
+        // let user = await getUser(credentials.email);
+        // if (user.length === 0) return null;
+        // let passwordsMatch = await compare(credentials.password, user[0].password!);
+        // if (passwordsMatch) return user[0] as any;
       },
     }),
-    Passage,
-    Pinterest,
-    Reddit,
-    Slack,
-    Spotify,
-    Twitch,
-    Twitter,
-    WorkOS({
-      connection: process.env.AUTH_WORKOS_CONNECTION!,
-    }),
-    Zoom,
   ],
   basePath: "/auth",
   callbacks: {

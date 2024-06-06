@@ -19,6 +19,7 @@
     "Thang Huu Vu <hi@thvu.dev>"
   ],
   "dependencies": {
+    "@neondatabase/serverless": "^0.9.3",
     "@auth/unstorage-adapter": "^2.0.0",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-collapsible": "^1.0.3",
@@ -27,8 +28,10 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@simplewebauthn/server": "^9.0.3",
     "@vercel/kv": "^1.0.1",
+    "bcrypt-ts": "^5.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "drizzle-orm": "^0.31.1",
     "lucide-react": "^0.274.0",
     "next": "latest",
     "next-auth": "beta",
