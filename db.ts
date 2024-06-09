@@ -5,7 +5,13 @@ import { eq, ilike } from 'drizzle-orm';
 import { sql } from 'drizzle-orm/sql';
 import { genSaltSync, hashSync } from 'bcrypt-ts';
 
-let client = neon(process.env.POSTGRES_URL!, {
+const postgresUrl = process.env.NEXT_PUBLIC_POSTGRES_URL;
+
+if (!postgresUrl) {
+  throw new Error("No database connection string was provided to `neon()`. Perhaps an environment variable has not been set?");
+}
+
+let client = neon(postgresUrl, {
   fetchOptions: {
     cache: 'no-store'
   }
@@ -31,11 +37,12 @@ export const users = pgTable('users', {
 
 export type SelectUser = typeof users.$inferSelect;
 
-export async function createUser(email: string, password: string) {
+export async function createUser(name: string, email: string, password: string) {
   let salt = genSaltSync(10);
   let hash = hashSync(password, salt);
-
-  return await db.insert(users).values({ email, password: hash });
+  const User = db.insert(users).values({ name, email, password: hash });
+  console.log(User);
+  return User;
 }
 
 export async function getUser(email: string) {

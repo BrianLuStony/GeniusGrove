@@ -10,7 +10,7 @@ import vercelKVDriver from "unstorage/drivers/vercel-kv"
 import { UnstorageAdapter } from "@auth/unstorage-adapter"
 import type { NextAuthConfig } from "next-auth"
 import { compare } from 'bcrypt-ts';
-import { getUser } from "./db"
+import { getUser, createUser } from "./db"
 
 const storage = createStorage({
   driver: process.env.VERCEL
@@ -33,7 +33,7 @@ const config = {
     GitHub,
     Google,
     Credentials({
-      name: "Sign in",
+      name: "Credentials",
       credentials: {
         email: {
           label: "Email",
@@ -52,39 +52,36 @@ const config = {
           console.error("No user found with email:", email);
           return null;
         }
-        // const passwordsMatch = await compare(password, user[0].password!);
-        // if (!passwordsMatch) {
-        //   console.error("Invalid password for user:", email);
-        //   return null;
-        // }
-        if(password == user[0].password){
+        const passwordsMatch = await compare(password, user[0].password!);
+        //console.log(passwordsMatch);
+        if(passwordsMatch){
           console.log(user[0]);
           return user[0] as any;
         }else{
           return null;
         }
-        // let user = await getUser(credentials.email);
-        // if (user.length === 0) return null;
-        // let passwordsMatch = await compare(credentials.password, user[0].password!);
-        // if (passwordsMatch) return user[0] as any;
       },
     }),
   ],
-  basePath: "/auth",
+  secret: process.env.AUTH_SECRET,
+  basePath:'/api/auth',
   callbacks: {
     authorized({ request, auth }) {
       const { pathname } = request.nextUrl
       if (pathname === "/middleware-example") return !!auth
       return true
     },
-    jwt({ token, trigger, session, account }) {
-      if (trigger === "update") token.name = session.user.name
-      if (account?.provider === "keycloak") {
-        return { ...token, accessToken: account.access_token }
-      }
-      return token
+    jwt({ token, trigger, session, account,user}) {
+      // if (trigger === "update") token.name = session.user.name
+      // if (account?.provider === "keycloak") {
+      //   return { ...token, accessToken: account.access_token }
+      // }
+      // return token
+      user && (token.user = user)
+			return token
     },
     async session({ session, token }) {
+      console.log("Token: ", token);
       if (token?.accessToken) {
         session.accessToken = token.accessToken
       }

@@ -1,5 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
-import { Button } from "./ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import { Button } from "../ui/button"
 import { auth } from "auth"
 import {
   DropdownMenu,
@@ -7,15 +7,17 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
+} from "../ui/dropdown-menu"
 import { SignIn, SignOut } from "./auth-components"
+import { SignInButton } from "./signin-button"
 
 export default async function UserButton() {
   const session = await auth()
   console.log("Sessions is :" , session);
-  if (!session?.user) return <SignIn />
+  if (!session?.user) return <SignInButton/>
   return (
     <div className="flex gap-2 items-center">
+      
       <span className="hidden text-sm sm:inline-flex">
         {session.user.email}
       </span>
