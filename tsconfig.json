@@ -30,6 +30,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "gemini-start.js"  ],
   "exclude": ["node_modules"]
 }

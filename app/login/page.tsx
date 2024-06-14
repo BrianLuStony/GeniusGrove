@@ -1,7 +1,7 @@
 import { auth } from "auth";
 import { redirect } from "next/navigation";
-import LoginForm from "@/components/login-form";
-import { GoogleSignInButton } from "@/components/authButtons";
+import LoginForm from "@/components/Sign-components/login-form";
+import { GoogleSignInButton } from "@/components/Sign-components/authButtons";
 
 export default async function LoginPage() {
   const session = await auth();

@@ -5,11 +5,7 @@ module.exports = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'avatars.githubusercontent.com'
-      },
-      {
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com'
+        hostname: '**'
       },
       // Add more remote patterns as needed
     ],

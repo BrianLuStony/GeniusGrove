@@ -77,8 +77,8 @@ const config = {
       //   return { ...token, accessToken: account.access_token }
       // }
       // return token
-      user && (token.user = user)
-			return token
+      user && (token.user = user);
+			return token;
     },
     async session({ session, token }) {
       console.log("Token: ", token);
