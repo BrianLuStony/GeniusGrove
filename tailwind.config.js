@@ -2,14 +2,10 @@
 module.exports = {
   darkMode: "selector",
   content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-  ],
-  safelist: [
-    'bg-green-500', 'text-white', 'p-4', 'rounded-md',
-    // Add any other classes that might be dynamically added
+    "./pages/**/*.{ts,tsx,json}",
+    "./components/**/*.{ts,tsx,json}",
+    "./app/**/*.{ts,tsx,json}",
+    "./src/**/*.{ts,tsx,json}",
   ],
   theme: {
     container: {
