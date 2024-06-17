@@ -12,19 +12,9 @@ import type { NextAuthConfig } from "next-auth"
 import { compare } from 'bcrypt-ts';
 import { getUser, createUser } from "./db"
 
-const storage = createStorage({
-  driver: process.env.VERCEL
-    ? vercelKVDriver({
-        url: process.env.AUTH_KV_REST_API_URL,
-        token: process.env.AUTH_KV_REST_API_TOKEN,
-        env: false,
-      })
-    : memoryDriver(),
-})
 
 export const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
-  adapter: UnstorageAdapter(storage),
   session: {
     strategy: 'jwt',
   },
