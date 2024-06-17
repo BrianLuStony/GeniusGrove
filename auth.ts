@@ -22,7 +22,7 @@ const storage = createStorage({
     : memoryDriver(),
 })
 
-const config = {
+export const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   adapter: UnstorageAdapter(storage),
   session: {

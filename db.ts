@@ -37,6 +37,12 @@ export const users = pgTable('users', {
 
 export type SelectUser = typeof users.$inferSelect;
 
+export async function updateUser(email: string, newEmail: string){
+  const User = await db.update(users).set({email:newEmail}).where(eq(users.email, email));
+  console.log("User update: ", User);
+  return User;
+}
+
 export async function createUser(name: string, email: string, password: string) {
   let salt = genSaltSync(10);
   let hash = hashSync(password, salt);
@@ -49,6 +55,7 @@ export async function getUser(email: string) {
   const User =  await db.select().from(users).where(eq(users.email, email));
   return User;
 }
+
 
 export async function getUsers(
   search: string,

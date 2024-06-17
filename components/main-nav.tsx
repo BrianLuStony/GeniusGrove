@@ -66,6 +66,14 @@ export function MainNav() {
               User Table
             </NavigationMenuLink>
           </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              href="/get-start"
+              className={navigationMenuTriggerStyle()}
+            >
+              Get-Start
+            </NavigationMenuLink>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
     </div>

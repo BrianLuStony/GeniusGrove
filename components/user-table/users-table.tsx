@@ -13,6 +13,7 @@ import { SelectUser } from '@/db';
 import { deleteUser } from './actions';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
+import {auth} from "@/auth"
 
 export function UsersTable({
   users,
