@@ -1,6 +1,7 @@
 'use client';
 import { useState,useEffect } from "react";
 import Questionnaire from "./questionnaire";
+import parse from 'html-react-parser';
 import axios from "axios";
 
 export default function CustomUser(){
@@ -21,7 +22,7 @@ export default function CustomUser(){
             1. Display the name "${answers.name}".
             2. Set the background color to "${answers.color}".
             3. Display the age "${answers.age}" within the <div>.
-            Please use tailwinds to make it pretty
+            Please use inline styles instead of Tailwind CSS classes.
             `;
           const response = await axios.post('/api/chat', { prompt: prompt });
     

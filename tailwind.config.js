@@ -6,6 +6,7 @@ module.exports = {
     "./components/**/*.{ts,tsx,json}",
     "./app/**/*.{ts,tsx,json}",
     "./src/**/*.{ts,tsx,json}",
+    "./app/api/chat/*.{ts,tsx,json}",
   ],
   theme: {
     container: {
