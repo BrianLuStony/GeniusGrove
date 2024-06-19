@@ -62,7 +62,7 @@ export default function CustomUser(){
 
         inputs.forEach((input) => {
             const correctAnswer = input.getAttribute('data-answer');
-            if (input.value === correctAnswer) {
+            if ((input as HTMLInputElement).value === correctAnswer) {
                 score++;
             }
         });
