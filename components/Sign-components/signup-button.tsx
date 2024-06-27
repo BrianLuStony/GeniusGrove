@@ -12,6 +12,12 @@ export function SignUpButton() {
   };
 
   return (
-    <Button onClick={handleSignIn}>Register</Button>
+    <div className="text-center mt-6">
+      <span className="text-gray-600">Not a user yet?</span>{' '}
+      <a href="/register" className="text-blue-600 hover:text-blue-800 font-semibold">
+        Register
+      </a>
+    </div>
+    // <Button onClick={handleSignIn}>Register</Button>
   );
 }

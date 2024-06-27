@@ -1,0 +1,38 @@
+.formField {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  
+  .formField input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .formField label {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #999;
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+  
+  .formField input:focus,
+  .formField input:not(:placeholder-shown) {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .formField input:focus + label,
+  .formField input:not(:placeholder-shown) + label {
+    top: -25px;
+    left: 0;
+    font-size: 14px;
+    color: white;
+  }

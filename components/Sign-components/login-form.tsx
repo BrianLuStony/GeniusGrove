@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useState } from "react";
+import styles from './login-form.module.css';
+
 
 import { Button } from "@/components/ui/button";
 import {
@@ -75,31 +77,31 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="space-y-6">
-      <Form {...form} >
+    <div className="space-y-6 w-full max-w-xl mx-auto">
+      <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="text-white p-4 md:p-16 border-[1.5px] rounded-lg border-gray-300 flex flex-col items-center justify-center gap-y-6"
-        >
+          className="text-white p-8 md:p-16 border-2 rounded-xl border-gray-300 flex flex-col items-center justify-center gap-y-10 w-full"
+>
+  {/* Form contents */}
           {errorMessage && (
-            <div className="text-red-500 mb-4">
-              {errorMessage}
-            </div>
+            <div className="text-red-500 mb-4">{errorMessage}</div>
           )}
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Provide Email</FormLabel>
+              <FormItem className={`${styles.formField} w-full max-w-sm`}>
                 <FormControl>
                   <Input
-                    className="text-black space-y-6"
-                    placeholder="Provide Email"
+                    className="text-black text-xl py-10 px-4 h-16 w-full"
+                    placeholder=" "
                     {...field}
                     type="text"
+                    id="email"
                   />
                 </FormControl>
+                <label htmlFor="email">Provide Email</label>
               </FormItem>
             )}
           />
@@ -107,25 +109,26 @@ export default function LoginForm() {
             control={form.control}
             name="password"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Provide Password</FormLabel>
+              <FormItem className={`${styles.formField} w-full max-w-sm`}>
                 <FormControl>
                   <Input
-                    className="text-black space-y-6" 
-                    placeholder="Provide Password"
+                    className="text-black text-xl py-10 px-4 h-16 w-full"
+                    placeholder=" "
                     {...field}
                     type="password"
+                    id="password"
                   />
                 </FormControl>
+                <label htmlFor="password">Provide Password</label>
               </FormItem>
             )}
           />
           <Button
             type="submit"
-            className="hover:scale-110 hover:bg-cyan-700"
+            className="hover:scale-110 hover:bg-cyan-700 text-lg py-3 px-6 h-14 w-full"
             disabled={form.formState.isSubmitting}
           >
-            {form.formState.isSubmitting ? "Opening...." : "Open Sesame!"}
+            {form.formState.isSubmitting ? "Opening...." : "Login"}
           </Button>
         </form>
       </Form>
