@@ -30,7 +30,7 @@ export default function MainPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-3xl font-bold">NextAuth.js Example</h1>
+      <h1 className="text-5xl flex font-bold items-center justify-center">Design your own study environment</h1>
       <div>
         This is an example site to demonstrate how to use{" "}
         <CustomLink href="https://nextjs.authjs.dev">NextAuth.js</CustomLink>{" "}
