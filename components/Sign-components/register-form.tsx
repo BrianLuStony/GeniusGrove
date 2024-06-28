@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import styles from './registerForm.module.css';
 
 import { Button } from "@/components/ui/button";
 import {
@@ -66,55 +67,96 @@ export default function FormPage() {
     }
   };
 
+  const LoginPrompt = () => {
+    return (
+      <div className="text-center mt-6">
+        <span className="text-gray-600">Already have an account?</span>{' '}
+        <a href="/login" className="text-blue-600 hover:text-blue-800 font-semibold">
+          Login
+        </a>
+      </div>
+    );
+  };
+
   return (
-    <div className="w-2/3 space-y-6">
-        <Form {...form} >
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-            <FormField
+    <div className="space-y-6 w-full max-w-xl mx-auto">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="text-white p-8 md:p-12 border-2 rounded-xl border-gray-300 flex flex-col items-center justify-center gap-y-8 w-full"
+        >
+          <FormField
             control={form.control}
             name="username"
             render={({ field }) => (
-                <FormItem>
-                <FormLabel>Username</FormLabel>
+              <FormItem className={`${styles.formField} w-full max-w-md`}>
                 <FormControl>
-                    <Input placeholder="Username" {...field} />
+                  <Input
+                    className="text-black text-lg py-6 px-4 h-16 w-full"
+                    placeholder=" "
+                    {...field}
+                    id="username"
+                  />
                 </FormControl>
-                <FormDescription>
-                    This is your public display name.
+                <label htmlFor="username">Username</label>
+                <FormDescription className="text-sm text-gray-500 mt-1">
+                  This is your public display name.
                 </FormDescription>
-                </FormItem>
+              </FormItem>
             )}
-            />
-            <FormField
+          />
+          <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
-                <FormItem>
-                <FormLabel>Email</FormLabel>
+              <FormItem className={`${styles.formField} w-full max-w-md`}>
                 <FormControl>
-                    <Input placeholder="Email" {...field} />
+                  <Input
+                    className="text-black text-lg py-6 px-4 h-16 w-full"
+                    placeholder=" "
+                    {...field}
+                    type="email"
+                    id="email"
+                  />
                 </FormControl>
-                <FormDescription>
-                    This is your public display name.
+                <label htmlFor="email">Email</label>
+                <FormDescription className="text-sm text-gray-500 mt-1">
+                  Enter a valid email
                 </FormDescription>
-                </FormItem>
+              </FormItem>
             )}
-            />
-            <FormField
+          />
+          <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
-                <FormItem>
-                <FormLabel>Password</FormLabel>
+              <FormItem className={`${styles.formField} w-full max-w-md`}>
                 <FormControl>
-                    <Input placeholder="Password" {...field} type="password" />
+                  <Input
+                    className="text-black text-lg py-6 px-4 h-16 w-full"
+                    placeholder=" "
+                    {...field}
+                    type="password"
+                    id="password"
+                  />
                 </FormControl>
-                </FormItem>
+                <label htmlFor="password">Password</label>
+                <FormDescription className="text-sm text-gray-500 mt-1">
+                  Password must be at least 6 characters
+                </FormDescription>
+              </FormItem>
             )}
-            />
-            <Button type="submit">Submit</Button>
+          />
+          <Button
+            type="submit"
+            className="hover:scale-105 hover:bg-cyan-700 text-lg py-3 px-6 h-14 w-full max-w-md"
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? "Registering..." : "Register"}
+          </Button>
         </form>
-        </Form>
+      </Form>
+      <LoginPrompt />
     </div>
   );
 }

@@ -1,0 +1,43 @@
+.formField {
+  position: relative;
+  margin-bottom: 24px;
+  width: 100%;
+  max-width: 28rem; /* Corresponds to max-w-md */
+}
+
+.formField input {
+  width: 100%;
+  height: 64px;
+  padding: 0 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.formField label {
+  position: absolute;
+  left: 16px;
+  top: 30%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #999;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  padding: 0 4px;
+  background-color: transparent;
+}
+
+.formField input:focus + label,
+.formField input:not(:placeholder-shown) + label {
+  top: -25px;
+  left: 0;
+  font-size: 14px;
+  color: white;
+  transform: translateY(-50%);
+}
+
+.formField input:focus {
+  border-color: #007bff;
+  outline: none;
+}

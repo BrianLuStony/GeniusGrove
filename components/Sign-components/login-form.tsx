@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useState } from "react";
-import styles from './login-form.module.css';
+import styles from './loginForm.module.css';
 
 
 import { Button } from "@/components/ui/button";
@@ -83,7 +83,6 @@ export default function LoginForm() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="text-white p-8 md:p-16 border-2 rounded-xl border-gray-300 flex flex-col items-center justify-center gap-y-10 w-full"
 >
-  {/* Form contents */}
           {errorMessage && (
             <div className="text-red-500 mb-4">{errorMessage}</div>
           )}
