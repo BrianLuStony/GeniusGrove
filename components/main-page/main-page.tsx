@@ -7,7 +7,7 @@ import Questionnaire from "../questionnaire/questionnaire";
 
 export default function MainPage() {
   const { data: session, update } = useSession();
-  const [showAnimation, setShowAnimation] = useState(false);
+  const [showAnimation, setShowAnimation] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
