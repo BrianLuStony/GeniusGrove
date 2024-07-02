@@ -49,7 +49,7 @@ export default function Chatbox() {
         <div className="mb-2 text-left">
           {messages.map((msg, index) => (
             <div key={index} className={`block mb-2 ${msg.sender === 'user' ? 'text-right' : 'text-left'}`}>
-              {msg.isHTML ? (
+              {!msg.isHTML ? (
                 <span
                   className={`inline-block p-2 rounded-lg ${
                     msg.sender === 'user' ? 'bg-blue-500 text-white' : ''
@@ -62,7 +62,7 @@ export default function Chatbox() {
                     msg.sender === 'user' ? 'bg-blue-500 text-white' : ''
                   }`}
                 >
-                  {msg.text}
+                  <ReactMarkdown>{msg.text}</ReactMarkdown>
                   {/* {msg.sender === 'user' ? msg.text : <ReactMarkdown>{msg.text}</ReactMarkdown>} */}
                 </span>
               )}
