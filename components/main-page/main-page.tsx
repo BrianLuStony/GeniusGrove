@@ -4,10 +4,17 @@ import { useEffect, useState } from "react";
 import CustomLink from "@/components/custom-link";
 import { useSession } from "next-auth/react";
 import Questionnaire from "../questionnaire/questionnaire"; 
+import { CarouselItem,Carousel } from "../ui/carousel";
 
 export default function MainPage() {
   const { data: session, update } = useSession();
   const [showAnimation, setShowAnimation] = useState(true);
+
+  const carouselItems: CarouselItem[] = [
+    { content: "Welcome to Your Study Environment" },
+    { content: "Customize Your Learning Experience" },
+    { content: "Achieve Your Academic Goals" },
+  ];
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -29,7 +36,10 @@ export default function MainPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 bg-[url('https://images.pexels.com/photos/743986/pexels-photo-743986.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')] bg-cover bg-center h-screen">
+      <div className="p-4 bg-gray-50 shadow-md rounded-lg relative z-0 ">
+        <Carousel items={carouselItems} />
+      </div>
       <h1 className="text-5xl flex font-bold items-center justify-center">Design your own study environment</h1>
       <div>
         This is an example site to demonstrate how to use{" "}
@@ -50,12 +60,6 @@ export default function MainPage() {
         demonstrate registration, login, and logout briefly.
       </div>
       <div className="flex flex-col bg-gray-100 rounded-md">
-        <div className="p-4 font-bold bg-gray-200 rounded-t-md">
-          Current Session
-        </div>
-        <pre className="py-6 px-4 whitespace-pre-wrap break-all">
-          {JSON.stringify(session, null, 2)}
-        </pre>
       </div>
     </div>
   );
