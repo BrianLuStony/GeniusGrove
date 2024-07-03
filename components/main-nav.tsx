@@ -51,6 +51,27 @@ export function MainNav() {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
+            <NavigationMenuTrigger className="px-2">
+              Subject
+            </NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                <ListItem href="/subjects/math" title="Mathematics">
+                  Numbers, formulas and related structures
+                </ListItem>
+                <ListItem href="/subjects/english" title="English">
+                  Vocabulary
+                </ListItem>
+                <ListItem href="/subjects/chem" title="Chemistry">
+                  Study of the properties and behavior of matter
+                </ListItem>
+                <ListItem href="/subjects/bio" title="Biology">
+                  Study of life
+                </ListItem>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
             <NavigationMenuLink
               href="/client-example"
               className={navigationMenuTriggerStyle()}
@@ -64,14 +85,6 @@ export function MainNav() {
               className={navigationMenuTriggerStyle()}
             >
               User Table
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink
-              href="/get-start"
-              className={navigationMenuTriggerStyle()}
-            >
-              Get-Start
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
