@@ -3,7 +3,11 @@ import { useState, useEffect } from "react";
 import Questionnaire from "./questionnaire";
 import axios from "axios";
 
-export default function CustomUser(){
+interface CustomUserProps {
+    subject: string;
+  }
+  
+const CustomUser: React.FC<CustomUserProps> = ({ subject }) => {
     const [messages, setMessages] = useState('');
     const [loading, setLoading] = useState(false);
     const [questionnaireComplete, setQuestionnaireComplete] = useState(false);
@@ -21,7 +25,7 @@ export default function CustomUser(){
             3. Display the age "${answers.age}" within the <div>.
             4. Make it pretty, such as using gradient, rounded corner, etc.
             5. Name and the age should be in the center of the block, larger and Roboto font.
-            6. Ask the user some questions about mathematics based on the age "${answers.age}".
+            6. Ask the user some questions about "${subject}" based on the age "${answers.age}".
             7. All the questions should be able to take input and also check the answers.
             8. There should be a submit button in the end and a id results <div> to show the percentage, no need script. 
             Please use inline styles instead of Tailwind CSS classes.
@@ -128,7 +132,7 @@ export default function CustomUser(){
     );
 };
 
-
+export default CustomUser;
 
 
 // 'use client';
