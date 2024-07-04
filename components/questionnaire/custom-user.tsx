@@ -12,6 +12,22 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject }) => {
     const [loading, setLoading] = useState(false);
     const [questionnaireComplete, setQuestionnaireComplete] = useState(false);
     const [answers, setAnswers] = useState<Record<string, string>>({});
+    const [showAnswers, setShowAnswers] = useState(false);
+
+
+    const toggleAnswers = () => {
+        setShowAnswers(!showAnswers);
+        const inputs = document.querySelectorAll('#generated-html-container input');
+        inputs.forEach((input) => {
+            const correctAnswer = input.getAttribute('data-answer');
+            if (showAnswers) {
+                (input as HTMLInputElement).value = '';
+            } else {
+                (input as HTMLInputElement).value = correctAnswer || '';
+            }
+        });
+    };
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -111,16 +127,24 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject }) => {
                     {/* <div id="results" style={{marginTop: '20px', color: '#000'}}></div> */}
                 </div>
             </div>
-            <button
-                className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
-                onClick={() => {
-                    localStorage.removeItem("questionnaireComplete");
-                    localStorage.removeItem("questionnaireAnswers");
-                    setQuestionnaireComplete(false);
-                }}
-            >
-                Reset Questionnaire
-            </button>
+            <div className="flex gap-4">
+                <button
+                    className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+                    onClick={() => {
+                        localStorage.removeItem("questionnaireComplete");
+                        localStorage.removeItem("questionnaireAnswers");
+                        setQuestionnaireComplete(false);
+                    }}
+                >
+                    Reset Questionnaire
+                </button>
+                <button
+                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                    onClick={toggleAnswers}
+                >
+                    {showAnswers ? 'Hide Answers' : 'Show Answers'}
+                </button>
+            </div>
             <form onSubmit={handleSubmit}>
                 <button
                     className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
