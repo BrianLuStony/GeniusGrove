@@ -5,8 +5,11 @@ import CustomLink from "@/components/custom-link";
 import { useSession } from "next-auth/react";
 import Questionnaire from "../questionnaire/questionnaire"; 
 import { CarouselItem,Carousel } from "../ui/carousel";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function MainPage() {
+  const router = useRouter();
   const { data: session, update } = useSession();
   const [showAnimation, setShowAnimation] = useState(true);
 
@@ -23,6 +26,10 @@ export default function MainPage() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  const handleNavigation = (path: string) => () => {
+    router.push(path);
+  };
 
 
   if (showAnimation) {
@@ -41,6 +48,22 @@ export default function MainPage() {
         <Carousel items={carouselItems} />
       </div>
       <h1 className="text-5xl flex font-bold items-center justify-center">Design your own study environment</h1>
+      <div>
+        <Button
+          className="hover:scale-110 hover:bg-cyan-700 text-lg py-3 px-6 h-14 w-full"
+          onClick={handleNavigation('/register')}
+        >
+          Create your own account
+        </Button>
+      </div>
+      <div>
+        <Button
+          className="hover:scale-110 hover:bg-cyan-700 text-lg py-3 px-6 h-14 w-full"
+          onClick={handleNavigation('/login')}
+        >
+          Already have an account?
+        </Button>
+      </div>
       <div>
         This is an example site to demonstrate how to use{" "}
         <CustomLink href="https://nextjs.authjs.dev">NextAuth.js</CustomLink>{" "}
