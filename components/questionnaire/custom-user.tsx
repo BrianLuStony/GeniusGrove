@@ -2,12 +2,14 @@
 import { useState, useEffect } from "react";
 import Questionnaire from "./questionnaire";
 import axios from "axios";
+import { useSession } from "next-auth/react"
 
 interface CustomUserProps {
     subject: string;
-  }
+    rank?: number | null;
+}
   
-const CustomUser: React.FC<CustomUserProps> = ({ subject }) => {
+const CustomUser: React.FC<CustomUserProps> = ({ subject, rank }) => {
     const [messages, setMessages] = useState('');
     const [loading, setLoading] = useState(false);
     const [questionnaireComplete, setQuestionnaireComplete] = useState(false);
@@ -114,6 +116,8 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject }) => {
 
     return (
         <div className="flex flex-col gap-6">
+            <h2>Subject: {subject}</h2>
+            {rank !== null ? <p>Your rank: {rank}</p> : <p>Sign in to see your rank</p>}
             <div className="flex flex-col bg-gray-100 rounded-md mt-6">
                 <div className="p-4 font-bold bg-gray-200 rounded-t-md">
                     Questionnaire Answers

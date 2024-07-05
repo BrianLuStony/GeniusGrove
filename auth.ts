@@ -46,7 +46,11 @@ export const config = {
         //console.log(passwordsMatch);
         if(passwordsMatch){
           console.log(user[0]);
-          return user[0] as any;
+          return {
+            id: Number(user[0].id), // Ensure this is a number
+            name: user[0].name,
+            email: user[0].email as string,
+          } as any;
         }else{
           return null;
         }
@@ -61,21 +65,25 @@ export const config = {
       if (pathname === "/middleware-example") return !!auth
       return true
     },
-    jwt({ token, trigger, session, account,user}) {
-      // if (trigger === "update") token.name = session.user.name
-      // if (account?.provider === "keycloak") {
-      //   return { ...token, accessToken: account.access_token }
-      // }
-      // return token
-      user && (token.user = user);
-			return token;
+    jwt({ token, user }) {
+      if (user) {
+        token.user = {
+          id: user.id ? Number(user.id) : 0,
+          name: user.name,
+          email: user.email as string,
+        };
+      }
+      return token;
     },
     async session({ session, token }) {
-      console.log("Token: ", token);
-      if (token?.accessToken) {
-        session.accessToken = token.accessToken
+      if (token.user) {
+        session.user = {
+          id: token.user.id !== undefined ? Number(token.user.id) : 0,
+          name: token.user.name ?? null,
+          email: token.user.email as string,
+        };
       }
-      return session
+      return session;
     },
   },
   experimental: {
@@ -88,12 +96,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth(config)
 
 declare module "next-auth" {
   interface Session {
-    accessToken?: string
+    accessToken?: string;
+    user: {
+      id: number;
+      name?: string | null;
+      email?: string;
+    };
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    accessToken?: string
+    accessToken?: string;
+    user: {
+      id: number ;
+      name?: string | null;
+      email?: string;
+    };
   }
 }

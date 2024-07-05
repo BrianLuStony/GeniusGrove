@@ -1,7 +1,7 @@
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
-import { pgTable, serial, varchar, timestamp} from 'drizzle-orm/pg-core';
-import { eq, ilike } from 'drizzle-orm';
+import { pgTable, serial, varchar, timestamp , integer, unique} from 'drizzle-orm/pg-core';
+import { eq, ilike , and } from 'drizzle-orm';
 import { sql } from 'drizzle-orm/sql';
 import { genSaltSync, hashSync } from 'bcrypt-ts';
 
@@ -33,6 +33,22 @@ export const users = pgTable('users', {
   password: varchar('password', { length: 200 }),
   createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp('updated_at').default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => sql`CURRENT_TIMESTAMP`)
+});
+
+export const subjects = pgTable('subjects', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 50 }).notNull().unique()
+});
+
+export const userSubjectRankings = pgTable('user_subject_rankings', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull().references(() => users.id),
+  subjectId: integer('subject_id').notNull().references(() => subjects.id),
+  rank: integer('rank').notNull(),
+}, (table) => {
+  return {
+    userSubjectUnique: unique().on(table.userId, table.subjectId)
+  }
 });
 
 export type SelectUser = typeof users.$inferSelect;
@@ -87,4 +103,75 @@ export async function getUsers(
 
 export async function deleteUserById(id: number) {
   await db.delete(users).where(eq(users.id, id));
+}
+
+
+export async function initializeOrGetRanking(userId: number, subjectId: number) {
+  const existingRanking = await db
+    .select()
+    .from(userSubjectRankings)
+    .where(and(
+      eq(userSubjectRankings.userId, userId),
+      eq(userSubjectRankings.subjectId, subjectId)
+    ))
+    .limit(1);
+
+  if (existingRanking.length > 0) {
+    return existingRanking[0];
+  }
+
+  const initialRank = 0; // Or whatever initial value you want
+  const newRanking = await db.insert(userSubjectRankings)
+    .values({ userId, subjectId, rank: initialRank })
+    .returning();
+
+  return newRanking[0];
+}
+
+export async function addOrUpdateRanking(userId: number, subjectId: number, rank: number) {
+  const existingRanking = await db
+    .select()
+    .from(userSubjectRankings)
+    .where(and(
+      eq(userSubjectRankings.userId, userId),
+      eq(userSubjectRankings.subjectId, subjectId)
+    ))
+    .limit(1);
+
+  if (existingRanking.length > 0) {
+    return await db.update(userSubjectRankings)
+      .set({ rank })
+      .where(and(
+        eq(userSubjectRankings.userId, userId),
+        eq(userSubjectRankings.subjectId, subjectId)
+      ))
+      .returning();
+  } else {
+    return await db.insert(userSubjectRankings)
+      .values({ userId, subjectId, rank })
+      .returning();
+  }
+}
+
+export async function getUserRankings(userId: number) {
+  return await db
+    .select({
+      subjectName: subjects.name,
+      rank: userSubjectRankings.rank
+    })
+    .from(userSubjectRankings)
+    .innerJoin(subjects, eq(subjects.id, userSubjectRankings.subjectId))
+    .where(eq(userSubjectRankings.userId, userId));
+}
+
+export async function getSubjectRankings(subjectId: number) {
+  return await db
+    .select({
+      userName: users.name,
+      rank: userSubjectRankings.rank
+    })
+    .from(userSubjectRankings)
+    .innerJoin(users, eq(users.id, userSubjectRankings.userId))
+    .where(eq(userSubjectRankings.subjectId, subjectId))
+    .orderBy(userSubjectRankings.rank);
 }
