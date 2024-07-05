@@ -47,7 +47,7 @@ export const config = {
         if(passwordsMatch){
           console.log(user[0]);
           return {
-            id: Number(user[0].id), // Ensure this is a number
+            id: user[0].id, // Ensure this is a number
             name: user[0].name,
             email: user[0].email as string,
           } as any;
@@ -68,7 +68,7 @@ export const config = {
     jwt({ token, user }) {
       if (user) {
         token.user = {
-          id: user.id ? Number(user.id) : 0,
+          id: String(user.id),
           name: user.name,
           email: user.email as string,
         };
@@ -78,9 +78,10 @@ export const config = {
     async session({ session, token }) {
       if (token.user) {
         session.user = {
-          id: token.user.id !== undefined ? Number(token.user.id) : 0,
+          id: token.user.id,
           name: token.user.name ?? null,
           email: token.user.email as string,
+          
         };
       }
       return session;
@@ -98,7 +99,7 @@ declare module "next-auth" {
   interface Session {
     accessToken?: string;
     user: {
-      id: number;
+      id: string;
       name?: string | null;
       email?: string;
     };
@@ -109,7 +110,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     accessToken?: string;
     user: {
-      id: number ;
+      id: string;
       name?: string | null;
       email?: string;
     };
