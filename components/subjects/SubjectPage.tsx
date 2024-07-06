@@ -18,7 +18,7 @@ export default function SubjectPage({ subjectName, subjectId, session }: Subject
     async function fetchRank() {
       if (session && session.user && session.user.id) {
         try {
-          const ranking = await initializeOrGetRanking(session.user.id, subjectId);
+          const ranking = await initializeOrGetRanking(Number(session.user.id), subjectId);
           setRank(ranking.rank);
         } catch (error) {
           console.error("Error fetching rank:", error);

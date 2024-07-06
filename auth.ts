@@ -71,6 +71,7 @@ export const config = {
           id: String(user.id),
           name: user.name,
           email: user.email as string,
+          image: user.image,
         };
       }
       return token;
@@ -81,7 +82,7 @@ export const config = {
           id: token.user.id,
           name: token.user.name ?? null,
           email: token.user.email as string,
-          
+          image: token.user.image ?? null,
         };
       }
       return session;
@@ -102,6 +103,7 @@ declare module "next-auth" {
       id: string;
       name?: string | null;
       email?: string;
+      image?: string | null;
     };
   }
 }
@@ -113,6 +115,7 @@ declare module "next-auth/jwt" {
       id: string;
       name?: string | null;
       email?: string;
+      image?: string | null;
     };
   }
 }
