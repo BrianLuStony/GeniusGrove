@@ -80,11 +80,11 @@ export const config = {
     },
     async session({ session, token }) {
       if (token && session.user) {
-        session.user.id = token.id;
-        session.user.email = token.email;
-        session.user.name = token.name ?? null;
-        session.user.image = token.image ?? null;
-        session.user.emailVerified = token.emailVerified ?? null;
+        session.user.id = token.id as string
+        session.user.email = token.email as string
+        session.user.name = token.name as string | null
+        session.user.image = token.image as string | null
+        session.user.emailVerified = token.emailVerified as Date | null
       }
       return session;
     },
@@ -100,6 +100,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(config)
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
+    accessToken?: string;
     user: {
       id: string;
       email: string;
@@ -115,10 +116,13 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
   interface JWT {
-    id: string;
-    email: string;
-    name?: string | null;
-    image?: string | null;
-    emailVerified?: Date | null;
+    accessToken?: string;
+    user: {
+      id: string;
+      email: string;
+      name?: string | null;
+      image?: string | null;
+      emailVerified?: Date | null;
+    };
   }
 }
