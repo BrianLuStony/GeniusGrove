@@ -1,6 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
-import { pgTable, serial, varchar, timestamp , integer, unique} from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, timestamp , integer, unique, text} from 'drizzle-orm/pg-core';
 import { eq, ilike , and } from 'drizzle-orm';
 import { sql } from 'drizzle-orm/sql';
 import { genSaltSync, hashSync } from 'bcrypt-ts';
@@ -32,7 +32,9 @@ export const users = pgTable('users', {
   email: varchar('email', { length: 200 }).unique(),
   password: varchar('password', { length: 200 }),
   createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: timestamp('updated_at').default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => sql`CURRENT_TIMESTAMP`)
+  updatedAt: timestamp('updated_at').default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => sql`CURRENT_TIMESTAMP`),
+  image: text('image'),
+  emailVerified: timestamp('email_verified')
 });
 
 export const subjects = pgTable('subjects', {

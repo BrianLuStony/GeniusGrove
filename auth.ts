@@ -11,6 +11,7 @@ import { UnstorageAdapter } from "@auth/unstorage-adapter"
 import type { NextAuthConfig } from "next-auth"
 import { compare } from 'bcrypt-ts';
 import { getUser, createUser } from "./db"
+import type { DefaultSession} from "next-auth"
 
 
 export const config = {
@@ -50,6 +51,8 @@ export const config = {
             id: user[0].id, // Ensure this is a number
             name: user[0].name,
             email: user[0].email as string,
+            image: user[0].image,
+            emailVerified: user[0].emailVerified ?? null,
           } as any;
         }else{
           return null;
@@ -67,23 +70,21 @@ export const config = {
     },
     jwt({ token, user }) {
       if (user) {
-        token.user = {
-          id: String(user.id),
-          name: user.name,
-          email: user.email as string,
-          image: user.image,
-        };
+        token.id = user.id as string;
+        token.email = user.email as string;
+        token.name = user.name ?? null;
+        token.image = user.image ?? null;
+        token.emailVerified = user.emailVerified ?? null;
       }
       return token;
     },
     async session({ session, token }) {
-      if (token.user) {
-        session.user = {
-          id: token.user.id,
-          name: token.user.name ?? null,
-          email: token.user.email as string,
-          image: token.user.image ?? null,
-        };
+      if (token && session.user) {
+        session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.name = token.name ?? null;
+        session.user.image = token.image ?? null;
+        session.user.emailVerified = token.emailVerified ?? null;
       }
       return session;
     },
@@ -96,26 +97,28 @@ export const config = {
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)
 
+
 declare module "next-auth" {
-  interface Session {
-    accessToken?: string;
+  interface Session extends DefaultSession {
     user: {
       id: string;
+      email: string;
       name?: string | null;
-      email?: string;
       image?: string | null;
-    };
+      emailVerified?: Date | null;
+    } & DefaultSession["user"]
+  }
+  interface User {
+    emailVerified?: Date | null;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    accessToken?: string;
-    user: {
-      id: string;
-      name?: string | null;
-      email?: string;
-      image?: string | null;
-    };
+    id: string;
+    email: string;
+    name?: string | null;
+    image?: string | null;
+    emailVerified?: Date | null;
   }
 }
