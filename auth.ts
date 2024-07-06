@@ -68,7 +68,7 @@ export const config = {
     jwt({ token, user }) {
       if (user) {
         token.user = {
-          id: user.id as string,
+          id: String(user.id),
           name: user.name,
           email: user.email as string,
         };
@@ -81,6 +81,7 @@ export const config = {
           id: token.user.id,
           name: token.user.name ?? null,
           email: token.user.email as string,
+          
         };
       }
       return session;
@@ -109,7 +110,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     accessToken?: string;
     user: {
-      id: string ;
+      id: string;
       name?: string | null;
       email?: string;
     };
