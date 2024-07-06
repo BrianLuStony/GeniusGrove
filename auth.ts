@@ -51,8 +51,6 @@ export const config = {
             id: user[0].id, // Ensure this is a number
             name: user[0].name,
             email: user[0].email as string,
-            image: user[0].image,
-            emailVerified: user[0].emailVerified ?? null,
           } as any;
         }else{
           return null;
