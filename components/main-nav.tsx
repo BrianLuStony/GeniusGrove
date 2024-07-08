@@ -32,7 +32,7 @@ export function MainNav() {
       </CustomLink>
       <NavigationMenu>
         <NavigationMenuList>
-          <NavigationMenuItem>
+          <NavigationMenuItem className="hidden">
             <NavigationMenuTrigger className="px-2">
               Server Side
             </NavigationMenuTrigger>
@@ -70,14 +70,6 @@ export function MainNav() {
                 </ListItem>
               </ul>
             </NavigationMenuContent>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink
-              href="/client-example"
-              className={navigationMenuTriggerStyle()}
-            >
-              Client Side
-            </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink

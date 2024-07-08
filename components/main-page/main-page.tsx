@@ -47,45 +47,56 @@ export default function MainPage() {
       <div className="p-4 bg-gray-50 shadow-md rounded-lg relative z-0 ">
         <Carousel items={carouselItems} />
       </div>
-      <h1 className="text-5xl flex font-bold items-center justify-center">Design your own study environment</h1>
-      <div>
+      <h1 className="text-5xl font-bold text-center mb-8">Design your own study environment</h1>
+
+      <div className="space-y-4 mb-8">
         <Button
-          className="hover:scale-110 hover:bg-cyan-700 text-lg py-3 px-6 h-14 w-full"
+          className="hover:scale-105 transition-transform bg-cyan-600 hover:bg-cyan-700 text-white text-lg py-3 px-6  rounded-lg shadow-md"
           onClick={handleNavigation('/register')}
         >
           Create your own account
         </Button>
-      </div>
-      <div>
+        
         <Button
-          className="hover:scale-110 hover:bg-cyan-700 text-lg py-3 px-6 h-14 w-full"
+          className="hover:scale-105 transition-transform bg-gray-200 hover:bg-gray-300 text-gray-800 text-lg py-3 px-6  rounded-lg shadow-md"
           onClick={handleNavigation('/login')}
         >
           Already have an account?
         </Button>
       </div>
-      <div>
-        Welcome to GeniusGrove, your AI-powered study environment! Here, you can:
-        <ul>
+
+      <div className=" p-6 rounded-lg shadow-md mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Welcome to GeniusGrove, your AI-powered study environment!</h2>
+        <p className="mb-2">Here, you can:</p>
+        <ul className="list-disc pl-6 space-y-2">
           <li>Customize your learning experience across four core subjects: Biology, Mathematics, English, and Chemistry.</li>
           <li>Interact with our advanced AI tutor to get personalized assistance and explanations.</li>
           <li>Track your progress and receive tailored study recommendations.</li>
         </ul>
       </div>
-      <div>
-        Get started by selecting a subject:
-        <ul>
-          <li><CustomLink href="/subjects/bio" className="underline">Biology</CustomLink></li>
-          <li><CustomLink href="/subjects/math" className="underline">Mathematics</CustomLink></li>
-          <li><CustomLink href="/subjects/english" className="underline">English</CustomLink></li>
-          <li><CustomLink href="/subjects/chem" className="underline">Chemistry</CustomLink></li>
+
+      <div className="p-6 rounded-lg shadow-md mb-8">
+        <h3 className="text-xl font-semibold mb-4">Get started by selecting a subject:</h3>
+        <ul className="grid grid-cols-2 gap-4">
+          {['Biology', 'Mathematics', 'English', 'Chemistry'].map((subject) => (
+            <li key={subject}>
+              <CustomLink 
+                href={`/subjects/${subject.toLowerCase()}`} 
+                className="block p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow text-center text-lg font-medium text-cyan-600 hover:text-cyan-700"
+              >
+                {subject}
+              </CustomLink>
+            </li>
+          ))}
         </ul>
       </div>
-      <div>
-        Our platform uses <CustomLink href="https://nextjs.authjs.dev">NextAuth.js</CustomLink> for secure authentication. 
+
+      <div className="text-sm text-gray-600 mb-4">
+        Our platform uses <CustomLink href="https://nextjs.authjs.dev" className="text-cyan-600 hover:underline">NextAuth.js</CustomLink> for secure authentication. 
         Create an account or log in to save your progress and access personalized features.
       </div>
-      <div>
+
+      <div className="text-sm text-gray-500 italic">
         Note: This is a dynamic learning environment. Your study materials and AI interactions are regularly updated to provide the most current and relevant educational content.
       </div>
       <div className="flex flex-col bg-gray-100 rounded-md">
