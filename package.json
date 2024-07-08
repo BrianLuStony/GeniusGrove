@@ -11,13 +11,6 @@
     "build": "next build",
     "start": "next start"
   },
-  "author": "Iain Collins <me@iaincollins.com>",
-  "contributors": [
-    "Balázs Orbán <info@balazsorban.com>",
-    "Nico Domino <yo@ndo.dev>",
-    "Lluis Agusti <hi@llu.lu>",
-    "Thang Huu Vu <hi@thvu.dev>"
-  ],
   "dependencies": {
     "@ai-sdk/google": "^0.0.20",
     "@as-integrations/next": "^3.0.0",
