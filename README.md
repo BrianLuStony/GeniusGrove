@@ -1,21 +1,24 @@
-<p align="center">
-   <br/>
-   <p align="center">
+<h1 align="center" style="font-size: 3em; font-weight: bold;">
+   📚 GG (GeniusGrove) 🚀
+</h1>
+
+<h3 align="center" style="font-size: 1.5em;">
    Customizable AI-Powered Study Environment
-   </p>
-   <p align="center" style="align: center;">
-      <a href="https://nextjs.org/">
-        <img src="https://img.shields.io/badge/built%20with-Next.js-000000?style=flat-square&logo=next.js&logoColor=white" alt="Built with Next.js" />
-      </a>
-      <a href="https://www.typescriptlang.org/">
-        <img src="https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
-      </a>
-   </p>
+</h3>
+
+<p align="center" style="align: center;">
+   <a href="https://nextjs.org/">
+     <img src="https://img.shields.io/badge/built%20with-Next.js-000000?style=flat-square&logo=next.js&logoColor=white" alt="Built with Next.js" />
+   </a>
+   <a href="https://www.typescriptlang.org/">
+     <img src="https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
+   </a>
 </p>
 
 ## Overview
 
-This project leverages Gemini AI to create a web application that empowers users to customize their own study environment. It's designed to enhance the learning experience by providing personalized, AI-driven study tools and resources.
+GG leverages Gemini AI to create a web application that empowers users to customize their own study environment. It's designed to enhance the learning experience by providing personalized, AI-driven study tools and resources.
+
 
 ## Tech Stack
 
