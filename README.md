@@ -4,9 +4,6 @@
    Customizable AI-Powered Study Environment
    </p>
    <p align="center" style="align: center;">
-      <a href="https://github.com/yourusername/yourrepository">
-        <img alt="GitHub" src="https://img.shields.io/github/license/yourusername/yourrepository">
-      </a>
       <a href="https://nextjs.org/">
         <img src="https://img.shields.io/badge/built%20with-Next.js-000000?style=flat-square&logo=next.js&logoColor=white" alt="Built with Next.js" />
       </a>
