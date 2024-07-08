@@ -36,7 +36,7 @@ export default function MainPage() {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-gray-100 z-50">
         <h1 className="text-6xl md:text-8xl font-bold text-center animate-fadeIn">
-          Hello World
+          Genius Grove
         </h1>
       </div>
     );
@@ -65,22 +65,28 @@ export default function MainPage() {
         </Button>
       </div>
       <div>
-        This is an example site to demonstrate how to use{" "}
-        <CustomLink href="https://nextjs.authjs.dev">NextAuth.js</CustomLink>{" "}
-        for authentication. Check out the{" "}
-        <CustomLink href="/server-example" className="underline">
-          Server
-        </CustomLink>{" "}
-        and the{" "}
-        <CustomLink href="/client-example" className="underline">
-          Client
-        </CustomLink>{" "}
-        examples to see how to secure pages and get session data.
+        Welcome to GeniusGrove, your AI-powered study environment! Here, you can:
+        <ul>
+          <li>Customize your learning experience across four core subjects: Biology, Mathematics, English, and Chemistry.</li>
+          <li>Interact with our advanced AI tutor to get personalized assistance and explanations.</li>
+          <li>Track your progress and receive tailored study recommendations.</li>
+        </ul>
       </div>
       <div>
-        WebAuthn users are reset on every deploy, don't expect your test user(s)
-        to still be available after a few days. It is designed to only
-        demonstrate registration, login, and logout briefly.
+        Get started by selecting a subject:
+        <ul>
+          <li><CustomLink href="/subjects/bio" className="underline">Biology</CustomLink></li>
+          <li><CustomLink href="/subjects/math" className="underline">Mathematics</CustomLink></li>
+          <li><CustomLink href="/subjects/english" className="underline">English</CustomLink></li>
+          <li><CustomLink href="/subjects/chem" className="underline">Chemistry</CustomLink></li>
+        </ul>
+      </div>
+      <div>
+        Our platform uses <CustomLink href="https://nextjs.authjs.dev">NextAuth.js</CustomLink> for secure authentication. 
+        Create an account or log in to save your progress and access personalized features.
+      </div>
+      <div>
+        Note: This is a dynamic learning environment. Your study materials and AI interactions are regularly updated to provide the most current and relevant educational content.
       </div>
       <div className="flex flex-col bg-gray-100 rounded-md">
       </div>
