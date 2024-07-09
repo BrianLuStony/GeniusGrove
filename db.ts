@@ -107,6 +107,21 @@ export async function deleteUserById(id: number) {
   await db.delete(users).where(eq(users.id, id));
 }
 
+export async function getSubjectIdByName(name: string) {
+  try {
+    console.log(name);
+    const result = await db
+      .select({ id: subjects.id })
+      .from(subjects)
+      .where(eq(subjects.name, name))
+      .limit(1);
+
+    return result[0]?.id || null;
+  } catch (error) {
+    console.error('Error fetching subject ID:', error);
+    throw new Error('Failed to fetch subject ID');
+  }
+}
 
 export async function initializeOrGetRanking(userId: number, subjectId: number) {
   const existingRanking = await db

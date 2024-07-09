@@ -56,16 +56,16 @@ export function MainNav() {
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                <ListItem href="/subjects/math" title="Mathematics">
+                <ListItem href="/subjects/mathematics" title="Mathematics">
                   Numbers, formulas and related structures
                 </ListItem>
                 <ListItem href="/subjects/english" title="English">
                   Vocabulary
                 </ListItem>
-                <ListItem href="/subjects/chem" title="Chemistry">
+                <ListItem href="/subjects/chemistry" title="Chemistry">
                   Study of the properties and behavior of matter
                 </ListItem>
-                <ListItem href="/subjects/bio" title="Biology">
+                <ListItem href="/subjects/biology" title="Biology">
                   Study of life
                 </ListItem>
               </ul>
