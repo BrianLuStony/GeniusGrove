@@ -51,6 +51,7 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
             8. There should be a submit button in the end and a id results <div> to show the percentage, no need script. 
             Please use inline styles instead of Tailwind CSS classes.
             Ensure that each question has a data-answer attribute with the correct answer and at least 5 questions.
+            And every questions should be different. 
             `;
         const response = await axios.post('/api/chat', { prompt: prompt });
 
