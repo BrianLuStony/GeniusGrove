@@ -10,7 +10,7 @@ import vercelKVDriver from "unstorage/drivers/vercel-kv"
 import { UnstorageAdapter } from "@auth/unstorage-adapter"
 import type { NextAuthConfig } from "next-auth"
 import { compare } from 'bcrypt-ts';
-import { getUser, createUser } from "./db"
+import { getUser, createUser , getOrCreateOAuthUser,linkAccount } from "./db"
 import type { DefaultSession} from "next-auth"
 
 
@@ -61,6 +61,28 @@ export const config = {
   secret: process.env.AUTH_SECRET,
   basePath:'/api/auth',
   callbacks: {
+    async signIn({ user, account, profile }) {
+      if (account && profile) {
+        console.log("OAuth Sign In:", { user, account, profile }); // Add this for debugging
+        const dbUser = await getOrCreateOAuthUser(
+          profile.name ?? '',
+          profile.email ?? '',
+          account.provider,
+          profile.image as string
+        );
+        if (dbUser) {
+          console.log("DB User created/retrieved:", dbUser); // Add this for debugging
+          await linkAccount(
+            dbUser.id,
+            account.provider,
+            account.providerAccountId,
+            account
+          );
+          user.id = dbUser.id.toString();
+        }
+      }
+      return true;
+    },
     authorized({ request, auth }) {
       const { pathname } = request.nextUrl
       if (pathname === "/middleware-example") return !!auth
@@ -98,7 +120,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth(config)
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    accessToken?: string;
     user: {
       id: string;
       email: string;
@@ -114,13 +135,12 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
   interface JWT {
-    accessToken?: string;
-    user: {
-      id: string;
-      email: string;
-      name?: string | null;
-      image?: string | null;
-      emailVerified?: Date | null;
-    };
+    id: string;
+    email: string;
+    name?: string | null;
+    image?: string | null;
+    emailVerified?: Date | null;
+    provider?: string;
+    providerAccountId?: string;
   }
 }

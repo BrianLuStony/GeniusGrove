@@ -34,7 +34,8 @@ export const users = pgTable('users', {
   createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp('updated_at').default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => sql`CURRENT_TIMESTAMP`),
   image: text('image'),
-  emailVerified: timestamp('email_verified')
+  emailVerified: timestamp('email_verified'),
+  provider: varchar('provider', { length: 50 }),
 });
 
 export const subjects = pgTable('subjects', {
@@ -53,6 +54,75 @@ export const userSubjectRankings = pgTable('user_subject_rankings', {
   }
 });
 
+export const accounts = pgTable('accounts', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull().references(() => users.id),
+  provider: varchar('provider', { length: 50 }).notNull(),
+  providerAccountId: varchar('provider_account_id', { length: 200 }).notNull(),
+  refreshToken: text('refresh_token'),
+  accessToken: text('access_token'),
+  expiresAt: integer('expires_at'),
+  tokenType: varchar('token_type', { length: 50 }),
+  scope: varchar('scope', { length: 200 }),
+  idToken: text('id_token'),
+  sessionState: varchar('session_state', { length: 200 })
+}, (table) => {
+  return {
+    providerProviderAccountIdUnique: unique().on(table.provider, table.providerAccountId)
+  }
+});
+
+export async function getOrCreateOAuthUser(name: string, email: string, provider: string, image: string | null | undefined) {
+  //console.log("Getting or creating OAuth user:", { name, email, provider, image }); // Add this for debugging
+  let user = await getUser(email);
+  
+  if (user.length === 0) {
+    const newUser = await createUser(name, email, '', provider);
+    //console.log("New OAuth user created:", newUser); // Add this for debugging
+    return newUser;
+  }
+
+  // Update the provider if it's not set
+  if (!user[0].provider) {
+    const updatedUser = await db.update(users)
+      .set({ provider })
+      .where(eq(users.id, user[0].id))
+      .returning();
+    //console.log("Existing user updated with provider:", updatedUser[0]); // Add this for debugging
+    return updatedUser[0];
+  }
+
+  //console.log("Existing OAuth user found:", user[0]); // Add this for debugging
+  return user[0];
+}
+
+export async function linkAccount(userId: number, provider: string, providerAccountId: string, accountDetails: any) {
+  //console.log("Linking account:", { userId, provider, providerAccountId }); // Add this for debugging
+  const existingAccount = await db.select().from(accounts)
+    .where(and(
+      eq(accounts.userId, userId),
+      eq(accounts.provider, provider)
+    )).limit(1);
+
+  if (existingAccount.length === 0) {
+    const result = await db.insert(accounts).values({
+      userId,
+      provider,
+      providerAccountId,
+      refreshToken: accountDetails.refresh_token,
+      accessToken: accountDetails.access_token,
+      expiresAt: accountDetails.expires_at,
+      tokenType: accountDetails.token_type,
+      scope: accountDetails.scope,
+      idToken: accountDetails.id_token,
+      sessionState: accountDetails.session_state
+    }).returning();
+    //console.log("Account linked:", result); 
+  } else {
+    //console.log("Account already exists:", existingAccount[0]); 
+  }
+}
+
 export type SelectUser = typeof users.$inferSelect;
 
 export async function updateUser(email: string, newEmail: string){
@@ -61,12 +131,12 @@ export async function updateUser(email: string, newEmail: string){
   return User;
 }
 
-export async function createUser(name: string, email: string, password: string) {
-  let salt = genSaltSync(10);
-  let hash = hashSync(password, salt);
-  const User = db.insert(users).values({ name, email, password: hash });
-  console.log(User);
-  return User;
+export async function createUser(name: string, email: string, password: string, provider: string = 'email') {
+  //console.log("Creating user:", { name, email, provider }); // Add this for debugging
+  let hash = password ? hashSync(password, genSaltSync(10)) : null;
+  const User = await db.insert(users).values({ name, email, password: hash, provider }).returning();
+  //console.log("User created:", User[0]); // Add this for debugging
+  return User[0];
 }
 
 export async function getUser(email: string) {
