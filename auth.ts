@@ -88,7 +88,7 @@ export const config = {
       if (pathname === "/middleware-example") return !!auth
       return true
     },
-    jwt({ token, user }) {
+    jwt({ token, user ,account}) {
       
       if (user) {
         token.id = user.id as string;
@@ -96,6 +96,9 @@ export const config = {
         token.name = user.name ?? null;
         token.image = user.image ?? null;
         token.emailVerified = user.emailVerified ?? null;
+      }
+      if (account) {
+        token.accessToken = account.access_token
       }
       return token;
     },
@@ -107,6 +110,7 @@ export const config = {
         session.user.name = token.name as string | null
         session.user.image = token.image as string | null
         session.user.emailVerified = token.emailVerified as Date | null
+        session.accessToken = token.accessToken as string
       }
       return session;
     },
@@ -122,13 +126,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth(config)
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
+    accessToken?: string
     user: {
       id: string;
       email: string;
       name?: string | null;
       image?: string | null;
       emailVerified?: Date | null;
-      accessToken?: string;
     } & DefaultSession["user"]
   }
   interface User {
