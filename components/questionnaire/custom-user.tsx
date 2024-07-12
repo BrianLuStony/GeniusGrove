@@ -22,17 +22,41 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
 
 
     const toggleAnswers = () => {
-        setShowAnswers(!showAnswers);
-        const inputs = document.querySelectorAll('#generated-html-container input');
-        inputs.forEach((input) => {
-        const correctAnswer = input.getAttribute('data-answer');
-        if (showAnswers) {
-            (input as HTMLInputElement).value = '';
-        } else {
-            (input as HTMLInputElement).value = correctAnswer || '';
+        const newShowAnswers = !showAnswers;
+        setShowAnswers(newShowAnswers);
+        const container = document.getElementById('generated-html-container');
+        if (container) {
+            const visibleInputs = container.querySelectorAll('input:not([type="hidden"])');
+            const submitButton = container.querySelector<HTMLElement>('button[type="submit"]') ;
+            const explanations = container.querySelectorAll<HTMLElement>('.explanation');
+    
+            visibleInputs.forEach((input) => {
+                const inputId = input.id;
+                const hiddenInput = container.querySelector(`#${inputId}-answer`) as HTMLInputElement;
+                if (hiddenInput) {
+                    const correctAnswer = hiddenInput.getAttribute('data-answer');
+                    if (showAnswers) {
+                        (input as HTMLInputElement).value = '';
+                        (input as HTMLInputElement).disabled = false;
+                    } else {
+                        (input as HTMLInputElement).value = correctAnswer || '';
+                        (input as HTMLInputElement).disabled = true;
+                    }
+                }
+            });
+    
+            // Toggle submit button visibility
+            if (submitButton) {
+                submitButton.style.display = newShowAnswers ? 'none' : 'block';
+            }
+    
+            // Toggle explanation visibility
+            explanations.forEach((explanation) => {
+                explanation.style.display = newShowAnswers ? 'block' : 'none';
+            });
         }
-        });
     };
+    
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -40,21 +64,25 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
 
         try {
             const prompt = `
-            Create an HTML <div> element with the following requirements:
-            1. Display the name "${answers.name}".
-            2. Set the background color to "${answers.color}".
-            3. Display the age "${answers.age}" within the <div>.
-            4. Make it pretty, such as using gradient, rounded corner, etc.
-            5. Name and the age should be in the center of the block, larger and Roboto font.
-            6. Ask the user some questions about "${subject}" based on the age "${answers.age}" and ranking "${rank}".
-            7. All the questions should be able to take input and also check the answers.
-            8. There should be a submit button in the end and a id results <div> to show the percentage, no need script. 
-            Please use inline styles instead of Tailwind CSS classes.
-            Ensure that each question has a data-answer attribute with the correct answer and at least 5 questions.
-            And every questions should be different. 
-            `;
+                Create an HTML <div> element with the following requirements:
+                1. Display the name "${answers.name}".
+                2. Set the background color of the form to "${answers.color}" , not only <div> but also <form>.
+                3. Display the age "${answers.age}" within the <div>.
+                4. This is important make it pretty, such as using gradient, rounded corner, etc.
+                5. Name and the age should be in the center of the block, larger and Roboto font.
+                6. Ask the user 5 questions about "${subject}" based on the age "${answers.age}" and ranking "${rank}".
+                7. All the questions should be able to take input and also check the answers.
+                8. Questions can have numeric or text-based answers. For decimal answers, use text input".
+                9. Wrap all questions and the submit button in a <form> element.
+                10. Include a submit button with type="submit" at the end of the form.
+                11. Include a hidden input for each question with a 'data-answer' attribute containing the correct answer.
+                12. Add a <div id="results"></div> after the form to display the quiz results.
+                13. For each question, add a hidden explanation <div> with class "explanation" that explains the correct answer.
+                Please use inline styles instead of Tailwind CSS classes.
+                Ensure that each question must be different and  has a unique id and that the corresponding hidden input has a matching id with '-answer' appended.
+                `;
         const response = await axios.post('/api/chat', { prompt: prompt });
-
+        setShowAnswers(false);
         setMessages(response.data.response);
 
         } catch (error) {
@@ -108,37 +136,64 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
 
     const handleQuizSubmit = async (e: Event) => {
         e.preventDefault();
-        const inputs = document.querySelectorAll('#generated-html-container input');
-        let score = 0;
-        const resultsDiv = document.getElementById('results');
-
-        inputs.forEach((input) => {
-        const correctAnswer = input.getAttribute('data-answer');
-        if ((input as HTMLInputElement).value === correctAnswer) {
-            score++;
-        }
-        });
-        const percentage = (score / inputs.length) * 100;
-        if (resultsDiv) {
-        resultsDiv.style.display = 'block';
-        resultsDiv.innerHTML = `You got ${score} out of ${inputs.length} correct. Your score is ${percentage.toFixed(2)}%.`;
-        }
-        console.log(userId);
-        if (userId) {
-            await updateRanking(percentage);
+        const container = document.getElementById('generated-html-container');
+        const showA = document.getElementById('showAnswer');
+        showA?.classList.remove("hidden");
+        if (container) {
+            const visibleInputs = container.querySelectorAll('input:not([type="hidden"])');
+            let score = 0;
+            visibleInputs.forEach((input) => {
+                const inputId = input.id;
+                const hiddenInput = container.querySelector(`#${inputId}-answer`) as HTMLInputElement;
+                if (hiddenInput) {
+                    const correctAnswer = hiddenInput.getAttribute('data-answer');
+                    if ((input as HTMLInputElement).value.toLowerCase().trim() === correctAnswer?.toLowerCase().trim()) {
+                        score++;
+                    }
+                }
+            });
+            const totalQuestions = visibleInputs.length;
+            const percentage = (score / totalQuestions) * 100;
+            
+            const resultsDiv = document.getElementById('results');
+            if (resultsDiv) {
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = `You got ${score} out of ${totalQuestions} correct. Your score is ${percentage.toFixed(2)}%.`;
+            }
+            
+            if (userId) {
+                await updateRanking(percentage);
+            }
         }
     };
 
     useEffect(() => {
         if (messages) {
-        const container = document.getElementById("generated-html-container");
-        if (container) {
-            container.innerHTML = messages;
-            const submitButton = container.querySelector('button');
-            if (submitButton) {
-            submitButton.addEventListener('click', handleQuizSubmit);
+            const container = document.getElementById("generated-html-container");
+            if (container) {
+                container.innerHTML = messages;
+                const form = container.querySelector('form');
+                const submitButton = container.querySelector('button[type="submit"]');
+                const explanations = container.querySelectorAll<HTMLElement>('.explanation');
+    
+                if (form) {
+                    const submitHandler = (e: Event) => {
+                        e.preventDefault();
+                        handleQuizSubmit(e);
+                    };
+                    form.addEventListener('submit', submitHandler);
+                    
+                    // Hide explanations initially
+                    explanations.forEach((explanation) => {
+                        explanation.style.display = 'none';
+                    });
+    
+                    // Clean up the event listener when the component unmounts or messages change
+                    return () => {
+                        form.removeEventListener('submit', submitHandler);
+                    };
+                }
             }
-        }
         }
     }, [messages]);
 
@@ -175,7 +230,8 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
                     Reset Questionnaire
                 </button>
                 <button
-                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                    id="showAnswer"
+                    className="hidden mt-4 px-4 py-2 bg-blue-500 text-white rounded"
                     onClick={toggleAnswers}
                 >
                     {showAnswers ? 'Hide Answers' : 'Show Answers'}
