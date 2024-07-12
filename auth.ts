@@ -89,6 +89,7 @@ export const config = {
       return true
     },
     jwt({ token, user }) {
+      
       if (user) {
         token.id = user.id as string;
         token.email = user.email as string;
@@ -99,6 +100,7 @@ export const config = {
       return token;
     },
     async session({ session, token }) {
+
       if (token && session.user) {
         session.user.id = token.id as string
         session.user.email = token.email as string
@@ -126,6 +128,7 @@ declare module "next-auth" {
       name?: string | null;
       image?: string | null;
       emailVerified?: Date | null;
+      accessToken?: string;
     } & DefaultSession["user"]
   }
   interface User {
@@ -142,5 +145,6 @@ declare module "next-auth/jwt" {
     emailVerified?: Date | null;
     provider?: string;
     providerAccountId?: string;
+    accessToken?: string;
   }
 }
