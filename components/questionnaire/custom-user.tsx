@@ -21,7 +21,7 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
     const [answers, setAnswers] = useState<Record<string, string>>({});
     const [showAnswers, setShowAnswers] = useState(false);
     const [showVideo, setShowVideo] = useState(false);
-    const [generatedQuestions, setGeneratedQuestions] = useState<string[]>([]);
+    const [questionTopic, setQuestionTopic] = useState<string>('');
 
 
     const toggleAnswers = () => {
@@ -81,6 +81,7 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
                 11. Include a hidden input for each question with a 'data-answer' attribute containing the correct answer.
                 12. Add a <div id="results"></div> after the form to display the quiz results.
                 13. For each question, add a hidden explanation <div> with class "explanation" that explains the correct answer.
+                14. Include a topic in html about all the questions you provided with an id = 'topic' 
                 Please use inline styles instead of Tailwind CSS classes.
                 Ensure that each question must be different and  has a unique id and that the corresponding hidden input has a matching id with '-answer' appended.
                 `;
@@ -90,9 +91,12 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
 
         const parser = new DOMParser();
         const htmlDoc = parser.parseFromString(response.data.response, 'text/html');
-        const questionElements = htmlDoc.querySelectorAll('input:not([type="hidden"])');
-        const questions = Array.from(questionElements).map(el => el.previousSibling?.textContent || '').filter(Boolean);
-        setGeneratedQuestions(questions);
+        
+        // Extract the topic
+        const topicElement = htmlDoc.getElementById('topic');
+        const topic = topicElement ? topicElement.textContent?.trim() : subject;
+        
+        setQuestionTopic(topic ?? '');
 
         setShowVideo(true);
         } catch (error) {
@@ -110,6 +114,7 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
         setAnswers(savedAnswers ? JSON.parse(savedAnswers) : {});
         }
     }, []);
+
 
     const handleQuestionnaireComplete = (answers: Record<string, string>) => {
         setAnswers(answers);
@@ -257,7 +262,7 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
             {showVideo && (
                 <CustomVideo 
                     topic={subject} 
-                    questions={generatedQuestions.join(' ')}
+                    questions={questionTopic}
                 />
             )}
         </div>

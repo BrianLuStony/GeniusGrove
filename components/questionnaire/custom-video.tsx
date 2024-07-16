@@ -30,7 +30,7 @@ const CustomVideo: React.FC<CustomVideoProps> = ({ topic, questions }) => {
         setError(null);
         const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY; // Replace with your actual API key
         const MAX_RESULTS = 3; // Number of videos to fetch
-        console.log(API_KEY);
+        console.log(topic, questions)
         try {
             const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
                 params: {
