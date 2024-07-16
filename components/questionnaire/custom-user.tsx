@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Questionnaire from "./questionnaire";
 import axios from "axios";
 import { useSession } from "next-auth/react"
+import CustomVideo from "./custom-video";
 
 import { addOrUpdateRanking, getSubjectIdByName } from "@/db";
 
@@ -19,6 +20,8 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
     const [questionnaireComplete, setQuestionnaireComplete] = useState(false);
     const [answers, setAnswers] = useState<Record<string, string>>({});
     const [showAnswers, setShowAnswers] = useState(false);
+    const [showVideo, setShowVideo] = useState(false);
+    const [generatedQuestions, setGeneratedQuestions] = useState<string[]>([]);
 
 
     const toggleAnswers = () => {
@@ -85,6 +88,13 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
         setShowAnswers(false);
         setMessages(response.data.response);
 
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(response.data.response, 'text/html');
+        const questionElements = htmlDoc.querySelectorAll('input:not([type="hidden"])');
+        const questions = Array.from(questionElements).map(el => el.previousSibling?.textContent || '').filter(Boolean);
+        setGeneratedQuestions(questions);
+
+        setShowVideo(true);
         } catch (error) {
         console.error('Failed to fetch chat', error);
         } finally {
@@ -244,6 +254,12 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
                     Ready to send my prompt
                 </button>
             </form>
+            {showVideo && (
+                <CustomVideo 
+                    topic={subject} 
+                    questions={generatedQuestions.join(' ')}
+                />
+            )}
         </div>
     );
 };
