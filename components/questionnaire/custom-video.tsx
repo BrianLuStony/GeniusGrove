@@ -29,7 +29,7 @@ const CustomVideo: React.FC<CustomVideoProps> = ({ topic, questions }) => {
         setLoading(true);
         setError(null);
         const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY; // Replace with your actual API key
-        const MAX_RESULTS = 6; // Number of videos to fetch
+        const MAX_RESULTS = 6; // Fetch more videos to shuffle
         try {
             const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
                 params: {
@@ -41,6 +41,7 @@ const CustomVideo: React.FC<CustomVideoProps> = ({ topic, questions }) => {
                     key: API_KEY
                 }
             });
+            console.log(response.data.items);
             setVideos(shuffleArray(response.data.items).slice(0, 3)); // Shuffle and select 3 videos
         } catch (error) {
             console.error('Error fetching videos:', error);
@@ -62,14 +63,14 @@ const CustomVideo: React.FC<CustomVideoProps> = ({ topic, questions }) => {
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div>
-            <h1 style={{ fontSize: '3em' }}>Videos about {topic}</h1>
-            <h3 style={{ fontSize: '1.5em', color: 'red' }}>*Please watch the videos on Youtube for a better experience</h3>
-            <ul>
+        <div className="p-4">
+            <h1 className="text-3xl font-bold mb-4">Videos about {topic}</h1>
+            <h3 className="text-xl text-red-500 mb-4">*Please watch the videos on Youtube for a better experience</h3>
+            <ul className="space-y-4">
                 {videos.map((video) => (
-                    <li key={video.id.videoId}>
-                        <h3>{video.snippet.title}</h3>
-                        <p>{video.snippet.description}</p>
+                    <li key={video.id.videoId} className="border rounded-lg p-4 shadow-md">
+                        <h3 className="text-lg font-semibold">{video.snippet.title}</h3>
+                        <p className="text-gray-700">{video.snippet.description}</p>
                         <iframe
                             width="560"
                             height="315"
@@ -82,7 +83,12 @@ const CustomVideo: React.FC<CustomVideoProps> = ({ topic, questions }) => {
                     </li>
                 ))}
             </ul>
-            <button onClick={fetchVideos}>Refresh Videos</button>
+            <button
+                onClick={fetchVideos}
+                className="mt-6 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+            >
+                Refresh Videos
+            </button>
         </div>
     );
 };
