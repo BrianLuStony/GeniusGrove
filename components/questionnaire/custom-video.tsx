@@ -38,6 +38,7 @@ const CustomVideo: React.FC<CustomVideoProps> = ({ topic, questions }) => {
                     q: `${topic} ${questions}`,
                     type: 'video',
                     maxResults: MAX_RESULTS,
+                    videoDuration: 'any',
                     key: API_KEY
                 }
             });
