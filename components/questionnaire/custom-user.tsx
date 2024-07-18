@@ -124,7 +124,7 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
     };
 
     const updateRanking = async (percentage: number) => {
-        if (rank === null) return; // If there's no rank, we can't update it
+        if (rank === null) return;
 
         let newRank = rank;
         if (percentage >= 80) {

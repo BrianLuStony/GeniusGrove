@@ -43,13 +43,12 @@ export default function MainPage() {
   }
 
   return (
-    <div className={`flex flex-col gap-6 bg-[url('https://images.pexels.com/photos/743986/pexels-photo-743986.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')] dark:bg-none bg-cover bg-center h-screen
+    //bg-[url('https://images.pexels.com/photos/743986/pexels-photo-743986.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')]
+    <div className={`flex flex-col gap-6 bg-white dark:bg-none bg-cover bg-center h-screen
       dark:bg-slate-800 dark:text-white`}>    
-       <div className="p-4 bg-gray-50 dark:bg-gray-700 shadow-md rounded-lg relative z-0 ">
         <div className="p-4 bg-gray-50 dark:bg-gray-700 shadow-md rounded-lg relative z-0">
           <Carousel items={carouselItems} />
         </div>
-      </div>
       <h1 className="text-5xl font-bold text-center mb-8">Design your own study environment</h1>
 
       <div className="space-y-4 mb-8">
