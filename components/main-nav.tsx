@@ -68,6 +68,9 @@ export function MainNav() {
                 <ListItem href="/subjects/biology" title="Biology">
                   Study of life
                 </ListItem>
+                <ListItem href="/subjects/physics" title="Physics">
+                  Natural science of matter
+                </ListItem>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>

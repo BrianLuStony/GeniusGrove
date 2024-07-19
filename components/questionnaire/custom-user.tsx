@@ -4,7 +4,7 @@ import Questionnaire from "./questionnaire";
 import axios from "axios";
 import { useSession } from "next-auth/react"
 import CustomVideo from "./custom-video";
-
+import useBackgroundImage from "../ui/useBackgroundImage";
 import { addOrUpdateRanking, getSubjectIdByName } from "@/db";
 
 interface CustomUserProps {
@@ -22,6 +22,8 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
     const [showAnswers, setShowAnswers] = useState(false);
     const [showVideo, setShowVideo] = useState(false);
     const [questionTopic, setQuestionTopic] = useState<string>('');
+
+    const { backgroundImage, loading: bgLoading, error: bgError } = useBackgroundImage(subject);
 
 
     const toggleAnswers = () => {
@@ -218,8 +220,18 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
 
 
     return (
-        <div className="flex flex-col gap-6">
-            <h2>Subject: {subject}</h2>
+            <div 
+            className="flex flex-col gap-6 p-6 rounded-lg"
+            style={{
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+            }}
+            >
+            {bgLoading && <p>Loading background...</p>}
+            {bgError && <p>Error loading background: {bgError}</p>}
+            <div className="bg-white bg-opacity-80 p-6 rounded-lg">
+            <h2 className="text-2xl font-bold mb-4">Subject: {subject}</h2>
             {rank !== null ? <p>Your rank: {rank}</p> : <p>Sign in to see your rank</p>}
             <div className="flex flex-col bg-gray-100 rounded-md mt-6">
                 <div className="p-4 font-bold bg-gray-200 rounded-t-md">
@@ -265,6 +277,7 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
                     questions={questionTopic}
                 />
             )}
+            </div>
         </div>
     );
 };

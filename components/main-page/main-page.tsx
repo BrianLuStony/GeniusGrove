@@ -80,7 +80,7 @@ export default function MainPage() {
       <div className="p-6 rounded-lg shadow-md mb-8 bg-white dark:bg-gray-700">
         <h3 className="text-xl font-semibold mb-4">Get started by selecting a subject:</h3>
         <ul className="grid grid-cols-2 gap-4">
-          {['Biology', 'Mathematics', 'English', 'Chemistry'].map((subject) => (
+          {['Biology', 'Mathematics', 'English', 'Chemistry', 'Physics'].map((subject) => (
             <li key={subject}>
               <CustomLink 
                 href={`/subjects/${subject.toLowerCase()}`} 
