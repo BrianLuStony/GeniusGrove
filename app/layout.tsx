@@ -1,7 +1,7 @@
 import "./globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-// import Footer from "@/components/footer"
+import Footer from "@/components/footer"
 import Header from "@/components/header"
 import Providers from "./providers"
 import ThemeSwitcher from "@/components/main-page/ThemeSwitcher"
@@ -21,11 +21,10 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         <Providers>
         <div className="flex flex-col justify-between w-full h-full min-h-screen">
           <Header />
-          <main className="flex-auto w-full px-4 py-4 mx-auto sm:px-6 md:py-6">
-            
+          <main className="flex-auto w-full px-4 py-4 mx-auto sm:px-6 md:py-6 dark:bg-slate-800">
             {children}
           </main>
-          {/* <Footer /> */}
+          <Footer />
         </div>
         </Providers>
       </body>

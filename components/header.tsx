@@ -7,7 +7,6 @@ export default function Header() {
       <div className="flex items-center justify-between w-full h-16 px-4 mx-auto sm:px-6">
         <MainNav />
         <UserButton />
-        <ThemeSwitcher />
       </div>
     </header>
   )

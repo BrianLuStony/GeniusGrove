@@ -11,14 +11,15 @@ const useBackgroundImage = (subject: string) => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(`https://api.pexels.com/v1/search?query=${subject}&per_page=1`, {
+        const response = await axios.get(`https://api.pexels.com/v1/search?query=${subject}&per_page=10`, {
           headers: {
             Authorization: process.env.NEXT_PUBLIC_PEXELS_API_KEY,
           },
         });
 
         if (response.data.photos && response.data.photos.length > 0) {
-          setBackgroundImage(response.data.photos[0].src.large);
+          const randomIndex = Math.floor(Math.random() * response.data.photos.length);
+          setBackgroundImage(response.data.photos[randomIndex].src.large);
         } else {
           setError('No images found for this subject');
         }
