@@ -32,7 +32,7 @@ export default function MainPage() {
   };
 
 
-  if (showAnimation) {
+  if (showAnimation && !session) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-gray-100 z-50">
         <h1 className="text-6xl md:text-8xl font-bold text-center animate-fadeIn">

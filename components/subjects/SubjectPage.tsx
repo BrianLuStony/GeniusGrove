@@ -34,7 +34,7 @@ export default function SubjectPage({ subjectName, subjectId, session }: Subject
   return (
     <main className="flex flex-1 flex-col p-4 md:p-6">
       <div className="flex items-center mb-8">
-        <h1 className="font-semibold text-lg md:text-2xl">{subjectName}</h1>
+        <h1 className="font-semibold text-lg md:text-3xl dark:text-white">{subjectName}</h1>
       </div>
       <div className="w-full mb-4">
         <CustomUser
