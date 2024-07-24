@@ -18,9 +18,9 @@ import { Button } from "./ui/button"
 
 export function MainNav() {
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex gap-4 items-center ">
       <CustomLink href="/">
-        <Button variant="ghost" className="p-0">
+        <Button variant="ghost" className="p-0 dark:hover:bg-blue-600">
           <Image
             src="/logo.png"
             alt="Home"
@@ -33,7 +33,7 @@ export function MainNav() {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem className="hidden">
-            <NavigationMenuTrigger className="px-2">
+            <NavigationMenuTrigger className="px-2  ">
               Server Side
             </NavigationMenuTrigger>
             <NavigationMenuContent>
@@ -51,11 +51,11 @@ export function MainNav() {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="px-2">
+            <NavigationMenuTrigger className="px-2 dark:text-gray-200 dark:bg-primary hover:bg-gray-200 dark:hover:bg-blue-600">
               Subject
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+              <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] dark:text-gray-200 dark:bg-primary">
                 <ListItem href="/subjects/mathematics" title="Mathematics">
                   Numbers, formulas and related structures
                 </ListItem>
@@ -75,12 +75,12 @@ export function MainNav() {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuLink
-              href="/user-table"
-              className={navigationMenuTriggerStyle()}
-            >
-              User Table
-            </NavigationMenuLink>
+          <NavigationMenuLink
+            href="/user-table"
+            className={cn(navigationMenuTriggerStyle(), "dark:text-gray-200 dark:bg-primary hover:bg-gray-200 dark:hover:bg-blue-600")}
+          >
+            User Table
+          </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

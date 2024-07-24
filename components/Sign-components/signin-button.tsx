@@ -12,6 +12,6 @@ export function SignInButton() {
   };
 
   return (
-    <Button onClick={handleSignIn}>Sign In</Button>
+    <Button className="dark:hover:bg-blue-600" onClick={handleSignIn}>Sign In</Button>
   );
 }

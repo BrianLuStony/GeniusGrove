@@ -49,6 +49,6 @@ export default function ThemeSwitcher() {
   }
 
   return theme === 'dark' 
-    ? <FiSun onClick={toggleTheme} /> 
+    ? <FiSun style={{ color: 'white' }} onClick={toggleTheme} /> 
     : <FiMoon onClick={toggleTheme} />
 }

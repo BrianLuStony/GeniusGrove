@@ -16,16 +16,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className="h-full">
+      <body className={`${inter.className} flex flex-col min-h-full bg-gray-100 dark:bg-slate-800`}>
         <Providers>
-        <div className="flex flex-col justify-between w-full h-full min-h-screen">
-          <Header />
-          <main className="flex-auto w-full px-4 py-4 mx-auto sm:px-6 md:py-6 dark:bg-slate-800">
-            {children}
-          </main>
-          <Footer />
-        </div>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow w-full px-4 py-4 mx-auto sm:px-6 md:py-6 dark:bg-slate-800">
+              {children}
+            </main>
+            <Footer />
+          </div>
         </Providers>
       </body>
     </html>
