@@ -6,15 +6,17 @@ import { useSession } from "next-auth/react"
 import CustomVideo from "./custom-video";
 import useBackgroundImage from "../ui/useBackgroundImage";
 import { addOrUpdateRanking, getSubjectIdByName } from "@/db";
+import { Button } from "../ui/button";
 
 interface CustomUserProps {
     subject: string;
     rank: number | null;
     updateRank: (newRank: number | null) => void;
     userId: number | null;
+    topics: string[];
   }
   
-const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, userId }) => {
+const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, userId, topics}) => {
     const [messages, setMessages] = useState('');
     const [loading, setLoading] = useState(false);
     const [questionnaireComplete, setQuestionnaireComplete] = useState(false);
@@ -22,9 +24,23 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
     const [showAnswers, setShowAnswers] = useState(false);
     const [showVideo, setShowVideo] = useState(false);
     const [questionTopic, setQuestionTopic] = useState<string>('');
+    const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
     const { backgroundImage, loading: bgLoading, error: bgError } = useBackgroundImage(subject);
 
+
+    const toggleTopic = (topic: string) => {
+        setSelectedTopics(prev => 
+            prev.includes(topic) 
+            ? prev.filter(t => t !== topic)
+            : [...prev, topic]
+        );
+    };
+
+    const getRandomTopics = (count: number) => {
+        const shuffled = [...topics].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    };
 
     const toggleAnswers = () => {
         const newShowAnswers = !showAnswers;
@@ -67,15 +83,17 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
         e.preventDefault();
         setLoading(true);
 
+        let topicsForPrompt = selectedTopics.length > 0 ? selectedTopics : getRandomTopics(3);
+
         try {
             const prompt = `
                 Create an HTML <div> element with the following requirements:
                 1. Display the name "${answers.name}".
-                2. Set the background color of the form to "${answers.color}" , not only <div> but also <form>.
+                2. Set the background color of the form to "${answers.color}", not only <div> but also <form>.
                 3. Display the age "${answers.age}" within the <div>.
                 4. This is important make it pretty, such as using gradient, rounded corner, etc.
                 5. Name and the age should be in the center of the block, larger and Roboto font.
-                6. Ask the user 5 questions about "${subject}" based on the age "${answers.age}" and ranking "${rank}".
+                6. Ask the user 5 questions about "${subject}" covering the following topics: "${topicsForPrompt.join(', ')}" based on the age "${answers.age}" and ranking "${rank}".
                 7. All the questions should be able to take input and also check the answers.
                 8. Questions can have numeric or text-based answers. For decimal answers, use text input".
                 9. Wrap all questions and the submit button in a <form> element.
@@ -233,6 +251,20 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
             <div className="bg-white bg-opacity-80 p-6 rounded-lg">
             <h2 className="text-2xl font-bold mb-4">Subject: {subject}</h2>
             {rank !== null ? <p>Your rank: {rank}</p> : <p>Sign in to see your rank</p>}
+            <div className="mb-4">
+                <h3 className="text-lg font-semibold mb-2">Select Topics:</h3>
+                <div className="flex flex-wrap gap-2">
+                    {topics.map((topic) => (
+                    <Button
+                        key={topic}
+                        onClick={() => toggleTopic(topic)}
+                        variant={selectedTopics.includes(topic) ? "default" : "outline"}
+                    >
+                        {topic}
+                    </Button>
+                    ))}
+                </div>
+            </div>
             <div className="flex flex-col bg-gray-100 rounded-md mt-6">
                 <div className="p-4 font-bold bg-gray-200 rounded-t-md">
                     Questionnaire Answers
@@ -273,7 +305,7 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
             </form>
             {showVideo && (
                 <CustomVideo 
-                    topic={subject} 
+                    topic={subject}
                     questions={questionTopic}
                 />
             )}

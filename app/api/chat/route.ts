@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     }
     const result = await chat.sendMessage(prompt);
     const text = await result.response.text();
-    console.log("Post response is:", text);
+    // console.log("Post response is:", text);
     return NextResponse.json({ response: text });
   } catch (e) {
     console.log({ e });
