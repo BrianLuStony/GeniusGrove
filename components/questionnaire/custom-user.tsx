@@ -7,6 +7,7 @@ import CustomVideo from "./custom-video";
 import useBackgroundImage from "../ui/useBackgroundImage";
 import { addOrUpdateRanking, getSubjectIdByName } from "@/db";
 import { Button } from "../ui/button";
+import CustomLink from "../custom-link"
 
 interface CustomUserProps {
     subject: string;
@@ -248,9 +249,17 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
             >
             {bgLoading && <p>Loading background...</p>}
             {bgError && <p>Error loading background: {bgError}</p>}
-            <div className="bg-white bg-opacity-80 p-6 rounded-lg">
+            <div className="bg-white dark:bg-gray-800 bg-opacity-80 dark:bg-opacity-80 p-6 rounded-lg">
             <h2 className="text-2xl font-bold mb-4">Subject: {subject}</h2>
-            {rank !== null ? <p>Your rank: {rank}</p> : <p>Sign in to see your rank</p>}
+            {rank !== null ? (
+            <p className="text-gray-700 dark:text-gray-300">Your rank: {rank}</p>
+            ) : (
+            <p className="text-gray-700 dark:text-gray-300">
+                <CustomLink href="/login" className="text-blue-600 dark:text-blue-400 hover:underline">
+                Sign in
+                </CustomLink> to see your rank
+            </p>
+            )}
             <div className="mb-4">
                 <h3 className="text-lg font-semibold mb-2">Select Topics:</h3>
                 <div className="flex flex-wrap gap-2">
@@ -266,12 +275,12 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
                 </div>
             </div>
             <div className="flex flex-col bg-gray-100 rounded-md mt-6">
-                <div className="p-4 font-bold bg-gray-200 rounded-t-md">
+                {/* <div className="p-4 font-bold bg-gray-200 rounded-t-md">
                     Questionnaire Answers
-                </div>
-                <pre className="py-6 px-4 whitespace-pre-wrap break-all">
+                </div> */}
+                {/* <pre className="py-6 px-4 whitespace-pre-wrap break-all">
                     {JSON.stringify(answers, null, 2)}
-                </pre>
+                </pre> */}
                 <div>
                     <div id="generated-html-container"></div>
                     {/* <div id="results" style={{marginTop: '20px', color: '#000'}}></div> */}
@@ -286,7 +295,7 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
                         setQuestionnaireComplete(false);
                     }}
                 >
-                    Reset Questionnaire
+                    Reset User info
                 </button>
                 <button
                     id="showAnswer"
