@@ -40,7 +40,8 @@ export const users = pgTable('users', {
 
 export const subjects = pgTable('subjects', {
   id: serial('id').primaryKey(),
-  name: varchar('name', { length: 50 }).notNull().unique()
+  name: varchar('name', { length: 50 }).notNull().unique(), 
+  visited:integer('visited').notNull(),
 });
 
 export const userSubjectRankings = pgTable('user_subject_rankings', {
@@ -261,4 +262,21 @@ export async function getSubjectRankings(subjectId: number) {
     .innerJoin(users, eq(users.id, userSubjectRankings.userId))
     .where(eq(userSubjectRankings.subjectId, subjectId))
     .orderBy(userSubjectRankings.rank);
+}
+
+export async function incrementSubjectVisits(subjectId: number) {
+  try {
+    const result = await db
+      .update(subjects)
+      .set({ 
+        visited: sql`${subjects.visited} + 1`
+      })
+      .where(eq(subjects.id, subjectId))
+      .returning({ visited: subjects.visited });
+
+    return result[0]?.visited;
+  } catch (error) {
+    console.error('Error incrementing subject visits:', error);
+    throw new Error('Failed to increment subject visits');
+  }
 }

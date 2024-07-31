@@ -75,6 +75,25 @@ export function MainNav() {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
+            <NavigationMenuTrigger className="px-2 dark:text-gray-200 dark:bg-primary hover:bg-gray-200 dark:hover:bg-blue-600">
+              Quiz
+            </NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] dark:text-gray-200 dark:bg-primary">
+                <ListItem href="/quizzes/mathematics" title="Mathematics">
+                </ListItem>
+                <ListItem href="/quizzes/english" title="English">
+                </ListItem>
+                <ListItem href="/quizzes/chemistry" title="Chemistry">
+                </ListItem>
+                <ListItem href="/quizzes/biology" title="Biology">
+                </ListItem>
+                <ListItem href="/quizzes/physics" title="Physics">
+                </ListItem>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
           <NavigationMenuLink
             href="/user-table"
             className={cn(navigationMenuTriggerStyle(), "dark:text-gray-200 dark:bg-primary hover:bg-gray-200 dark:hover:bg-blue-600")}

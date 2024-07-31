@@ -1,31 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
-import CustomUser from '@/components/questionnaire/custom-user';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
-import { initializeOrGetRanking } from '@/db';
-import { Session } from 'next-auth';
+import { incrementSubjectVisits} from '@/db';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { SubjectPageProps, ExplanationSection, subjectTopics } from './type';
+import Cookies from 'js-cookie';
 
-interface SubjectPageProps {
-  subjectName: string;
-  subjectId: number;
-  session: Session | null;
-}
-interface ExplanationSection {
-  title: string;
-  content: string[];
-}
-
-
-const subjectTopics: Record<string, string[]> = {
-  'Mathematics': ['Algebra', 'Geometry', 'Calculus', 'Statistics', 'Linear Algebra', 'Number Theory', 'Trigonometry', 'Differential Equations', 'Discrete Mathematics', 'Topology'],
-  'Physics': ['Mechanics', 'Thermodynamics', 'Electromagnetism', 'Quantum Physics', 'Relativity', 'Optics', 'Nuclear Physics', 'Astrophysics', 'Fluid Dynamics', 'Particle Physics'],
-  'Chemistry': ['Organic Chemistry', 'Inorganic Chemistry', 'Physical Chemistry', 'Biochemistry', 'Analytical Chemistry', 'Polymer Chemistry', 'Electrochemistry', 'Thermochemistry', 'Nuclear Chemistry', 'Environmental Chemistry'],
-  'Biology': ['Genetics', 'Ecology', 'Microbiology', 'Anatomy', 'Physiology', 'Botany', 'Zoology', 'Molecular Biology', 'Evolutionary Biology', 'Marine Biology'],
-  'Computer Science': ['Algorithms', 'Data Structures', 'Artificial Intelligence', 'Machine Learning', 'Computer Networks', 'Databases', 'Operating Systems', 'Cybersecurity', 'Computer Graphics', 'Software Engineering'],
-  'English': ['Classical Literature', 'Modern Literature', 'Poetry', 'Drama', 'Novel', 'Short Story', 'Literary Criticism', 'Comparative Literature', 'World Literature', 'Children\'s Literature' , 'Vocabulary']
-};
 
 const TopicExplanation: React.FC<{ explanation: string }> = ({ explanation }) => {
   const parseExplanation = (text: string): ExplanationSection[] => {
@@ -66,29 +47,29 @@ const TopicExplanation: React.FC<{ explanation: string }> = ({ explanation }) =>
   );
 };
 
-export default function SubjectPage({ subjectName, subjectId, session }: SubjectPageProps) {
-  const [rank, setRank] = useState<number | null>(null);
+export default function SubjectPage({ subjectName, subjectId}: SubjectPageProps) {
   const [topicExplanations, setTopicExplanations] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const topics = subjectTopics[subjectName] || [];
 
   useEffect(() => {
-    async function fetchRank() {
-      if (session?.user?.id) {
+    const updateVisits = async () => {
+      const visitedSubjects = Cookies.get('visitedSubjects');
+      const visitedSubjectsArray = visitedSubjects ? JSON.parse(visitedSubjects) : [];
+
+      if (!visitedSubjectsArray.includes(subjectId)) {
         try {
-          const ranking = await initializeOrGetRanking(Number(session.user.id), subjectId);
-          setRank(ranking.rank);
+          await incrementSubjectVisits(subjectId);
+          visitedSubjectsArray.push(subjectId);
+          Cookies.set('visitedSubjects', JSON.stringify(visitedSubjectsArray), { expires: 1 }); // Cookie expires in 1 day
         } catch (error) {
-          console.error("Error fetching rank:", error);
+          console.error('Failed to update subject visits', error);
         }
       }
-    }
-    fetchRank();
-  }, [session, subjectId]);
+    };
 
-  const updateRank = (newRank: number | null) => {
-    setRank(newRank);
-  };
+    updateVisits();
+  }, [subjectId]);
 
   const fetchTopicExplanation = async (topic: string) => {
     if (topicExplanations[topic]) return;
@@ -109,13 +90,6 @@ export default function SubjectPage({ subjectName, subjectId, session }: Subject
   return (
     <main className="flex flex-1 flex-col p-4 md:p-6">
       <h1 className="font-semibold text-lg md:text-3xl dark:text-white mb-8">{subjectName}</h1>
-      <CustomUser
-        subject={subjectName}
-        rank={rank}
-        updateRank={updateRank}
-        userId={Number(session?.user.id)}
-        topics={topics}
-      />
       <Accordion type="single" collapsible className="w-full mt-8 dark:text-white">
         {topics.map((topic, index) => (
           <AccordionItem key={index} value={`item-${index}`}>
