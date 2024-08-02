@@ -101,6 +101,14 @@ export function MainNav() {
             User Table
           </NavigationMenuLink>
           </NavigationMenuItem>
+          <NavigationMenuItem>
+          <NavigationMenuLink
+            href="/about"
+            className={cn(navigationMenuTriggerStyle(), "dark:text-gray-200 dark:bg-primary hover:bg-gray-200 dark:hover:bg-blue-600")}
+          >
+            About
+          </NavigationMenuLink>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
     </div>
