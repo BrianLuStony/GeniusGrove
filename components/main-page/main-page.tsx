@@ -71,7 +71,7 @@ export default function MainPage() {
         <h2 className="text-2xl font-semibold mb-4">Welcome to GeniusGrove, your AI-powered study environment!</h2>
         <p className="mb-2">Here, you can:</p>
         <ul className="list-disc pl-6 space-y-2">
-          <li>Customize your learning experience across four core subjects: Biology, Mathematics, English, and Chemistry.</li>
+          <li>Customize your learning experience across four core subjects: Biology, Mathematics, English, Physics and Chemistry.</li>
           <li>Interact with our advanced AI tutor to get personalized assistance and explanations.</li>
           <li>Track your progress and receive tailored study recommendations.</li>
         </ul>

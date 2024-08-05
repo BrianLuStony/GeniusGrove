@@ -233,9 +233,9 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
         }
     }, [messages]);
 
-    if (!questionnaireComplete) {
-        return <Questionnaire onComplete={handleQuestionnaireComplete} />;
-    }
+    // if (!questionnaireComplete) {
+    //     return <Questionnaire onComplete={handleQuestionnaireComplete} />;
+    // }
 
 
     return (
@@ -287,7 +287,7 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
                 </div>
             </div>
             <div className="flex gap-4">
-                <button
+                {/* <button
                     className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
                     onClick={() => {
                         localStorage.removeItem("questionnaireComplete");
@@ -296,7 +296,7 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
                     }}
                 >
                     Reset User info
-                </button>
+                </button> */}
                 <button
                     id="showAnswer"
                     className="hidden mt-4 px-4 py-2 bg-blue-500 text-white rounded"
