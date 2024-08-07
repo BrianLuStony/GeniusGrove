@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full" suppressHydrationWarning>
       <body className={`${inter.className} flex flex-col min-h-full bg-gray-100 dark:bg-slate-800`}>
         <Providers>
           <div className="flex flex-col min-h-screen">

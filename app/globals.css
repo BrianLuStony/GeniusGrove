@@ -34,6 +34,16 @@
 
     --radius: 0.5rem;
   }
+
+  .light {
+    --background: var(--background-light);
+    --text: var(--text-light);
+  }
+  
+  .dark {
+    --background: var(--background-dark);
+    --text: var(--text-dark);
+  }
 }
 
 @layer base {

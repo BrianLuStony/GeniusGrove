@@ -68,7 +68,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 dark:text-gray-300">
       <h2 className="text-2xl font-bold mb-4">Contact Us</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -78,7 +78,7 @@ export default function Contact() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Name</FormLabel>
-                <FormControl>
+                <FormControl className='dark:text-black'>
                   <Input {...field} />
                 </FormControl>
                 <FormMessage />
@@ -91,7 +91,7 @@ export default function Contact() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
-                <FormControl>
+                <FormControl className='dark:text-black'>
                   <Input {...field} type="email" />
                 </FormControl>
                 <FormMessage />
@@ -104,7 +104,7 @@ export default function Contact() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Subject</FormLabel>
-                <FormControl>
+                <FormControl className='dark:text-black'>
                   <Input {...field} />
                 </FormControl>
                 <FormMessage />
@@ -117,7 +117,7 @@ export default function Contact() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Message</FormLabel>
-                <FormControl>
+                <FormControl className='dark:text-black'>
                   <Textarea {...field} rows={4} />
                 </FormControl>
                 <FormMessage />

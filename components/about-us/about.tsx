@@ -4,7 +4,7 @@ import React from 'react';
 export default function About() {
   return (
     <div>
-      <h1 className="text-3xl font-bold text-center dark:text-white mb-8">About Us</h1>
+      <h1 className="text-3xl font-bold text-center dark:text-gray-300 mb-8">About Us</h1>
 
       <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
         This personal project was created using Next.js and Gemini AI to participate in Google's Gemini Competition. Gemini is responsible for most of the design, questions, information, and recommendations, so there may be some content overlap. However, you can refresh Gemini's data with a button to get new content. This feature is still under development. We welcome your feedback on design or overall improvements. Please feel free to contact us.
