@@ -3,20 +3,21 @@
 import { useEffect, useState } from "react";
 import CustomLink from "@/components/custom-link";
 import { useSession } from "next-auth/react";
-import Questionnaire from "../questionnaire/questionnaire"; 
-import { CarouselItem,Carousel } from "../ui/carousel";
+import { CarouselItem, Carousel } from "../ui/carousel";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default function MainPage() {
   const router = useRouter();
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
   const [showAnimation, setShowAnimation] = useState(true);
+  const [fontSize, setFontSize] = useState(18); // Default font size
 
   const carouselItems: CarouselItem[] = [
-    { content: "Welcome to Your Study Environment" },
-    { content: "Customize Your Learning Experience" },
-    { content: "Achieve Your Academic Goals" },
+    { content: "Welcome to Genius Grove! 🎉" },
+    { content: "Customize Your Learning Adventure 🛠️" },
+    { content: "Achieve Your Dreams with Fun! 🌟" },
   ];
 
   useEffect(() => {
@@ -31,78 +32,99 @@ export default function MainPage() {
     router.push(path);
   };
 
-
-  if (showAnimation && !session) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-gray-100 z-50">
-        <h1 className="text-6xl md:text-8xl font-bold text-center animate-fadeIn">
-          Genius Grove
-        </h1>
-      </div>
-    );
-  }
-
   return (
-    //bg-[url('https://images.pexels.com/photos/743986/pexels-photo-743986.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')]
-    <div className={`flex flex-col gap-6 bg-white dark:bg-none bg-cover bg-center
-      dark:bg-slate-800 dark:text-white`}>    
-        <div className="p-4 bg-gray-50 dark:bg-gray-700 shadow-md rounded-lg relative z-0">
-          <Carousel items={carouselItems} />
+    <div
+      className={`flex flex-col gap-6 min-h-screen dark:bg-gray-900 dark:text-gray-100 bg-gray-100 text-gray-900`}
+      style={{
+        fontFamily: 'Comic Sans MS, cursive',
+        backgroundImage: `url("/background-stars.png")`,
+        backgroundRepeat: 'repeat',
+        padding: '20px',
+      }}
+    >
+      <header className="flex justify-between items-center mb-4">
+        <h1 className="text-5xl font-bold flex items-center">
+          Welcome to Genius Grove!
+        </h1>
+        <div className="flex items-center">
+          <button
+            className="px-4 py-2 bg-green-500 text-white rounded-full mr-2 hover:bg-green-600 transition-all duration-300 transform hover:scale-105"
+            onClick={() => setFontSize(prev => Math.max(prev - 2, 14))}
+          >
+            A-
+          </button>
+          <button
+            className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-all duration-300 transform hover:scale-105"
+            onClick={() => setFontSize(prev => Math.min(prev + 2, 28))}
+          >
+            A+
+          </button>
         </div>
-      <h1 className="text-5xl font-bold text-center mb-8">Design your own study environment</h1>
+      </header>
 
-      <div className="space-y-4 mb-8">
+      <div className="p-4 bg-yellow-100 shadow-md rounded-lg relative z-0 dark:bg-gray-800 dark:text-gray-100">
+        <Carousel items={carouselItems} />
+      </div>
+
+      <div className="flex flex-col md:flex-row items-center justify-around mt-8">
         <Button
-          className="hover:scale-105 transition-transform bg-cyan-600 hover:bg-cyan-700 text-white text-lg py-3 px-6 rounded-lg shadow-md dark:bg-cyan-700 dark:hover:bg-cyan-800"
+          className="px-6 py-3 bg-purple-500 text-white rounded-full hover:bg-purple-600 transition-all duration-300 transform hover:scale-105 mb-4 md:mb-0"
           onClick={handleNavigation('/register')}
+          style={{ fontSize: `${fontSize}px` }}
         >
-          Create your own account
+          Join the Fun! Create Your Account 🎈
         </Button>
-        
+
         <Button
-          className="hover:scale-105 transition-transform bg-gray-200 hover:bg-gray-300 text-gray-800 text-lg py-3 px-6 rounded-lg shadow-md dark:bg-gray-600 dark:hover:bg-gray-700 dark:text-white"
+          className="px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all duration-300 transform hover:scale-105"
           onClick={handleNavigation('/login')}
+          style={{ fontSize: `${fontSize}px` }}
         >
-          Already have an account?
+          Already on Board? Log In 🚪
         </Button>
       </div>
 
-      <div className=" p-6 rounded-lg shadow-md mb-8 bg-white dark:bg-gray-700">
-        <h2 className="text-2xl font-semibold mb-4">Welcome to GeniusGrove, your AI-powered study environment!</h2>
-        <p className="mb-2">Here, you can:</p>
+      <div className="p-6 rounded-lg shadow-md bg-white mt-8 border-2 border-blue-300 dark:bg-gray-800 dark:text-gray-100" style={{ fontSize: `${fontSize}px` }}>
+        <h2 className="text-3xl font-semibold mb-4 text-blue-600 dark:text-blue-400">Embark on a Learning Adventure! 🚀</h2>
+        <p className="mb-4">At Genius Grove, you can:</p>
         <ul className="list-disc pl-6 space-y-2">
-          <li>Customize your learning experience across four core subjects: Biology, Mathematics, English, Physics and Chemistry.</li>
-          <li>Interact with our advanced AI tutor to get personalized assistance and explanations.</li>
-          <li>Track your progress and receive tailored study recommendations.</li>
+          <li>Explore exciting subjects like Biology 🌿, Mathematics ➕, English 📚, Physics ⚛️, and Chemistry 🧪.</li>
+          <li>Chat with our friendly AI tutor for fun explanations and assistance 🤖.</li>
+          <li>Track your progress and earn cool badges and rewards 🏅.</li>
         </ul>
       </div>
 
-      <div className="p-6 rounded-lg shadow-md mb-8 bg-white dark:bg-gray-700">
-        <h3 className="text-xl font-semibold mb-4">Get started by selecting a subject:</h3>
+      <div className="p-6 rounded-lg shadow-md bg-white mt-8 border-2 border-green-300 dark:bg-gray-800 dark:text-gray-100" style={{ fontSize: `${fontSize}px` }}>
+        <h3 className="text-2xl font-semibold mb-4 text-green-600 dark:text-green-400">Choose a Subject to Begin:</h3>
         <ul className="grid grid-cols-2 gap-4">
-          {['Biology', 'Mathematics', 'English', 'Chemistry', 'Physics'].map((subject) => (
-            <li key={subject}>
-              <CustomLink 
-                href={`/subjects/${subject.toLowerCase()}`} 
-                className="block p-4 bg-white dark:bg-gray-600 rounded-lg shadow hover:shadow-md transition-shadow text-center text-lg font-medium text-cyan-600 dark:text-cyan-300 hover:text-cyan-700 dark:hover:text-cyan-400"
+          {[
+            { name: 'Biology', emoji: '🌿' },
+            { name: 'Mathematics', emoji: '➕' },
+            { name: 'English', emoji: '📚' },
+            { name: 'Chemistry', emoji: '🧪' },
+            { name: 'Physics', emoji: '⚛️' },
+          ].map((subject) => (
+            <li key={subject.name}>
+              <CustomLink
+                href={`/subjects/${subject.name.toLowerCase()}`}
+                className="block p-4 bg-pink-100 rounded-lg shadow hover:shadow-md transition-shadow text-center text-xl font-bold text-pink-600 hover:bg-pink-200 hover:scale-105 dark:bg-gray-700 dark:text-gray-100"
+                style={{ fontSize: `${fontSize}px` }}
               >
-                {subject}
+                {subject.name} {subject.emoji}
               </CustomLink>
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-        Our platform uses <CustomLink href="https://nextjs.authjs.dev" className="text-cyan-600 hover:underline">NextAuth.js</CustomLink> for secure authentication. 
-        Create an account or log in to save your progress and access personalized features.
-      </div>
-
-      <div className="text-sm text-gray-500 dark:text-gray-400 italic">
-        Note: This is a dynamic learning environment. Your study materials and AI interactions are regularly updated to provide the most current and relevant educational content.
-      </div>
-      <div className="flex flex-col bg-gray-100 rounded-md">
-      </div>
+      <footer className="text-center mt-8" style={{ fontSize: `${fontSize}px` }}>
+        <p className="text-gray-700 dark:text-gray-300">
+          🌟 Dive into the world of knowledge and have a blast learning! 🌟
+        </p>
+        <p className="text-gray-500 italic mt-2 dark:text-gray-400">
+          Note: Our platform is ever-evolving to bring you the coolest learning experiences. Stay tuned for more adventures!
+        </p>
+      </footer>
     </div>
   );
 }
