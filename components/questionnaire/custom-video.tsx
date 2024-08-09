@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { Search, RefreshCw, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface CustomVideoProps {
     topic: string;
@@ -12,7 +14,10 @@ interface Video {
         title: string;
         description: string;
         publishedAt: string;
-        thumbnails: { default: { url: string } };
+        thumbnails: { medium: { url: string } };
+    };
+    statistics?: {
+        viewCount: string;
     };
 }
 
@@ -28,67 +33,114 @@ const CustomVideo: React.FC<CustomVideoProps> = ({ topic, questions }) => {
     const fetchVideos = async () => {
         setLoading(true);
         setError(null);
-        const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY; // Replace with your actual API key
-        const MAX_RESULTS = 6; // Fetch more videos to shuffle
+        const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
+        const MAX_RESULTS = 20; // Fetch more videos to have a larger pool for filtering
+
         try {
-            const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
-                params: {
-                    part: 'snippet',
-                    q: `${topic} ${questions} English`,
-                    type: 'video',
-                    maxResults: MAX_RESULTS,
-                    videoDuration: 'medium',
-                    key: API_KEY
-                }
+            // Initial search request
+            const searchResponse = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(`${topic} ${questions} for kids educational`)}&type=video&maxResults=${MAX_RESULTS}&videoDuration=medium&videoEmbeddable=true&key=${API_KEY}`);
+            
+            if (!searchResponse.ok) {
+                throw new Error('Failed to fetch videos');
+            }
+
+            const searchData = await searchResponse.json();
+            
+            // Filter videos
+            const filteredVideos = searchData.items;
+            // filter((video: Video) => 
+            //     // video.snippet.title.toLowerCase().includes('kid') ||
+            //     // video.snippet.title.toLowerCase().includes('children') ||
+            //     video.snippet.description.toLowerCase().includes('educational')
+            // );
+
+            // Fetch video details including view count
+            const videoIds = filteredVideos.map((video: Video) => video.id.videoId).join(',');
+            const detailsResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoIds}&key=${API_KEY}`);
+            
+            if (!detailsResponse.ok) {
+                throw new Error('Failed to fetch video details');
+            }
+
+            const detailsData = await detailsResponse.json();
+
+            // Combine search results with video details
+            const videosWithStats = filteredVideos.map((video: Video) => {
+                const stats = detailsData.items.find((item: any) => item.id === video.id.videoId);
+                return {
+                    ...video,
+                    statistics: stats ? stats.statistics : null
+                };
             });
-            console.log(response.data.items);
-            setVideos(shuffleArray(response.data.items).slice(0, 3)); // Shuffle and select 3 videos
+
+            // Sort by view count and take top 3
+            const sortedVideos = videosWithStats
+                .sort((a: Video, b: Video) => {
+                    const aViews = a.statistics ? parseInt(a.statistics.viewCount) : 0;
+                    const bViews = b.statistics ? parseInt(b.statistics.viewCount) : 0;
+                    return bViews - aViews;
+                })
+                .slice(0, 3);
+
+            setVideos(sortedVideos);
         } catch (error) {
             console.error('Error fetching videos:', error);
-            setError('Failed to fetch videos. Please try again later.');
+            setError('Oops! We couldn\'t find any videos right now. Let\'s try again later!');
         } finally {
             setLoading(false);
         }
     };
 
-    const shuffleArray = (array: Video[]) => {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+    const formatViewCount = (count: string) => {
+        const num = parseInt(count);
+        if (num >= 1000000) {
+            return (num / 1000000).toFixed(1) + 'M';
+        } else if (num >= 1000) {
+            return (num / 1000).toFixed(1) + 'K';
         }
-        return array;
+        return num.toString();
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (loading) return <div className="text-center p-4">Loading fun videos for you...</div>;
+    if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
 
     return (
-        <div className="p-4">
-            <h1 className="text-3xl font-bold mb-4">Videos about {topic}</h1>
-            <h3 className="text-xl text-red-500 mb-4">*Please watch the videos on Youtube for a better experience</h3>
-            <ul className="space-y-4">
+        <div className="space-y-4">
+            <h2 className="text-2xl font-bold text-center">Popular Videos about {topic}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {videos.map((video) => (
-                    <li key={video.id.videoId} className="border rounded-lg p-4 shadow-md">
-                        <h3 className="text-lg font-semibold">{video.snippet.title}</h3>
-                        <p className="text-gray-700">{video.snippet.description}</p>
-                        <iframe
-                            width="560"
-                            height="315"
-                            src={`https://www.youtube.com/embed/${video.id.videoId}`}
-                            title={video.snippet.title}
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        ></iframe>
-                    </li>
+                    <Card key={video.id.videoId} className="overflow-hidden">
+                        <CardHeader className="p-0">
+                            <img 
+                                src={video.snippet.thumbnails.medium.url} 
+                                alt={video.snippet.title}
+                                className="w-full h-48 object-cover"
+                            />
+                        </CardHeader>
+                        <CardContent className="p-4">
+                            <CardTitle className="text-lg mb-2">{video.snippet.title}</CardTitle>
+                            <p className="text-sm text-gray-600 line-clamp-2">{video.snippet.description}</p>
+                            <div className="flex items-center mt-2 text-sm text-gray-500">
+                                <Eye className="mr-1 h-4 w-4" />
+                                {video.statistics ? formatViewCount(video.statistics.viewCount) : 'N/A'} views
+                            </div>
+                            <a 
+                                href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-2 inline-block bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                            >
+                                Watch on YouTube
+                            </a>
+                        </CardContent>
+                    </Card>
                 ))}
-            </ul>
-            <button
-                onClick={fetchVideos}
-                className="mt-6 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
-            >
-                Refresh Videos
-            </button>
+            </div>
+            <div className="text-center">
+                <Button onClick={fetchVideos} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+                    <RefreshCw className="mr-2 h-4 w-4" /> Find More Popular Videos
+                </Button>
+            </div>
         </div>
     );
 };
