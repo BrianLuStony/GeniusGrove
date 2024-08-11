@@ -32,6 +32,16 @@ export default function MainPage() {
     router.push(path);
   };
 
+  if (showAnimation && !session) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-yellow-100 z-50">
+        <h1 className="text-6xl md:text-8xl font-bold text-center animate-bounce text-purple-600" style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+          Genius Grove
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`flex flex-col gap-6 min-h-screen dark:bg-gray-900 dark:text-gray-100 bg-gray-100 text-gray-900`}

@@ -93,14 +93,14 @@ export function MainNav() {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuItem>
+          {/* <NavigationMenuItem>
           <NavigationMenuLink
             href="/user-table"
             className={cn(navigationMenuTriggerStyle(), "dark:text-gray-200 dark:bg-primary hover:bg-gray-200 dark:hover:bg-blue-600")}
           >
             User Table
           </NavigationMenuLink>
-          </NavigationMenuItem>
+          </NavigationMenuItem> */}
           <NavigationMenuItem>
           <NavigationMenuLink
             href="/about"
