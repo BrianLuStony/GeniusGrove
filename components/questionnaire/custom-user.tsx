@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Questionnaire from "./questionnaire";
 import axios from "axios";
 import { useSession } from "next-auth/react"
-import CustomVideo from "./custom-video";
 import useBackgroundImage from "../ui/useBackgroundImage";
 import { addOrUpdateRanking, getSubjectIdByName } from "@/db";
 import { Button } from "../ui/button";
@@ -23,7 +22,6 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
     const [questionnaireComplete, setQuestionnaireComplete] = useState(false);
     const [answers, setAnswers] = useState<Record<string, string>>({});
     const [showAnswers, setShowAnswers] = useState(false);
-    const [showVideo, setShowVideo] = useState(false);
     const [questionTopic, setQuestionTopic] = useState<string>('');
     const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
@@ -89,9 +87,8 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
         try {
             const prompt = `
                 Create an HTML <div> element with the following requirements:
-                1. Display the name "${answers.name}".
-                2. Set the background color of the form to "${answers.color}", not only <div> but also <form>.
-                3. Display the age "${answers.age}" within the <div>.
+                2. Set the background color of the form to blue, not only <div> but also <form>.
+
                 4. This is important make it pretty, such as using gradient, rounded corner, etc.
                 5. Name and the age should be in the center of the block, larger and Roboto font.
                 6. Ask the user 5 questions about "${subject}" covering the following topics: "${topicsForPrompt.join(', ')}" based on the age "${answers.age}" and ranking "${rank}".
@@ -119,7 +116,6 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
         
         setQuestionTopic(topic ?? '');
 
-        setShowVideo(true);
         } catch (error) {
         console.error('Failed to fetch chat', error);
         } finally {
@@ -312,12 +308,6 @@ const CustomUser: React.FC<CustomUserProps> = ({ subject, rank, updateRank, user
                     Ready to send my prompt
                 </button>
             </form>
-            {showVideo && (
-                <CustomVideo 
-                    topic={subject}
-                    questions={questionTopic}
-                />
-            )}
             </div>
         </div>
     );

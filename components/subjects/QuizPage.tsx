@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import CustomUser from '@/components/questionnaire/custom-user';
 import { initializeOrGetRanking } from '@/db';
-import { QuizPageProps ,subjectTopics } from './type';
+import { QuizPageProps ,subjectTopics } from './types';
 
 
 export default function QuizPage({ subjectName, subjectId, session }: QuizPageProps) {

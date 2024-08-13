@@ -25,3 +25,13 @@ export const subjectTopics: Record<string, string[]> = {
     'English': ['Classical Literature', 'Modern Literature', 'Poetry', 'Drama', 'Novel', 'Short Story', 'Literary Criticism', 'Comparative Literature', 'World Literature', 'Children\'s Literature' , 'Vocabulary']
 };
   
+export interface Game {
+    id: string;
+    name: string;
+    description: string;
+    instructions: string;
+    difficulty: 'Easy' | 'Medium' | 'Hard';
+    subject: string;
+  }
+  
+  export type Difficulty = 'Easy' | 'Medium' | 'Hard';

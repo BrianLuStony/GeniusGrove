@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { incrementSubjectVisits } from '@/db';
 import CustomVideo from '../questionnaire/custom-video';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { SubjectPageProps, ExplanationSection, subjectTopics } from './type';
+import { SubjectPageProps, ExplanationSection, subjectTopics } from './types';
 import Cookies from 'js-cookie';
 
 const TopicExplanation: React.FC<{ explanation: string; fontSize: number }> = ({ explanation, fontSize }) => {
